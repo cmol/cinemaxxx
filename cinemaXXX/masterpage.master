@@ -16,10 +16,10 @@
 		<div id="main">
 			<div id="navigation">
 				<ul>
-					<li onclick="location.href='Film.aspx'">Film</li>
-					<li>Is</li>
-					<li>The</li>
-					<li>Navigation</li>
+					<li onclick="location.href='#'">This</li>
+					<li onclick="location.href='#'">Is</li>
+					<li onclick="location.href='#'">The</li>
+					<li onclick="location.href='#'">Navigation</li>
 				</ul>
 			</div>
 			<div id="content">
