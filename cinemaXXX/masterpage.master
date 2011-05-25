@@ -1,0 +1,36 @@
+<%@ Master Language="C#" Inherits="cinemaXXX.masterpage" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head runat="server">
+	<title>MasterPage</title>
+	<asp:contentplaceholder id="head" runat="server" />
+	<link rel="StyleSheet" type="text/css" href="style.css" />
+</head>
+<body>
+<div id="container">
+<form runat="server">
+	<div id="wrapper">
+		<div id="header">
+			<span>This is the head</span>
+		</div>
+		<div id="main">
+			<div id="navigation">
+				<ul>
+					<li onclick="location.href='Film.aspx'">Film</li>
+					<li>Is</li>
+					<li>The</li>
+					<li>Navigation</li>
+				</ul>
+			</div>
+			<div id="content">
+				<asp:contentplaceholder id="ContentPlaceHolder" runat="server" /> 
+			</div>
+		</div>
+		<div id="footer">
+			This is the foot
+		</div>
+    </div>
+</form>
+</div>
+</body>
+</html>
