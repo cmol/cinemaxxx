@@ -1,0 +1,127 @@
+CREATE TABLE users 
+(
+usid INT AUTO_INCREMENT,
+fname VARCHAR(50),
+lname VARCHAR(50),
+passwd VARCHAR(20),
+phone VARCHAR(20),
+email VARCHAR(255),
+discount FLOAT,
+rid INT,
+PRIMARY KEY (usid)
+) ENGINE = InnoDB CHARACTER SET utf8;
+
+CREATE TABLE genres
+(
+gid INT AUTO_INCREMENT,
+title VARCHAR(200),
+PRIMARY KEY (gid)
+) ENGINE = InnoDB CHARACTER SET utf8;
+
+CREATE TABLE movies
+(
+moid INT AUTO_INCREMENT,
+title VARCHAR(50),
+runtime INT,
+launch DATETIME,
+imgurl VARCHAR(200),
+trailer VARCHAR(200),
+pgid INT,
+PRIMARY KEY (moid)
+) ENGINE = InnoDB CHARACTER SET utf8;
+
+CREATE TABLE pg_systems
+(
+pgsid int,
+title VARCHAR(50),
+PRIMARY KEY (pgsid)
+) ENGINE = InnoDB CHARACTER SET utf8;
+
+CREATE TABLE pgs
+(
+pgid INT AUTO_INCREMENT,
+title VARCHAR(50),
+description TEXT,
+pgsid INT,
+age_from INT,
+age_to INT,
+PRIMARY KEY (pgid),
+FOREIGN KEY (pgsid) REFERENCES pg_systems(pgsid) ON DELETE CASCADE
+) ENGINE = InnoDB CHARACTER SET utf8;
+
+CREATE TABLE theaters
+(
+tid INT AUTO_INCREMENT,
+title VARCHAR(50),
+seats INT,
+PRIMARY KEY(tid)
+) ENGINE = InnoDB CHARACTER SET utf8;
+
+CREATE TABLE prices
+(
+prid INT AUTO_INCREMENT,
+price FLOAT,
+title VARCHAR(20),
+PRIMARY KEY (prid)
+) ENGINE = InnoDB CHARACTER SET utf8;
+
+CREATE TABLE shows
+(
+shid INT AUTO_INCREMENT,
+show_start datetime,
+show_end datetime,
+moid INT,
+tid INT,
+prid INT,
+PRIMARY KEY (shid),
+FOREIGN KEY (moid) REFERENCES movies(moid) ON DELETE CASCADE,
+FOREIGN KEY (tid) REFERENCES theaters(tid) ON DELETE CASCADE,
+FOREIGN KEY (prid) REFERENCES prices(prid) ON DELETE SET NULL
+) ENGINE = InnoDB CHARACTER SET utf8;
+
+CREATE TABLE rights 
+(
+rid INT AUTO_INCREMENT,
+description VARCHAR(50),
+title VARCHAR(50),
+PRIMARY KEY(rid)
+) ENGINE = InnoDB CHARACTER SET utf8;
+
+CREATE TABLE people
+(
+peid INT AUTO_INCREMENT,
+fname VARCHAR(50),
+lname VARCHAR(50),
+PRIMARY KEY (peid)
+) ENGINE = InnoDB CHARACTER SET utf8;
+
+CREATE TABLE people_movies
+(
+peid INT NOT NULL,
+moid INT NOT NULL,
+what INT,
+PRIMARY KEY (peid,moid),
+FOREIGN KEY (peid) REFERENCES people(peid) ON DELETE CASCADE,
+FOREIGN KEY (moid) REFERENCES movies(moid) ON DELETE CASCADE
+) ENGINE = InnoDB CHARACTER SET utf8;
+
+CREATE TABLE movie_genre
+(
+moid INT NOT NULL,
+gid INT NOT NULL,
+PRIMARY KEY (moid,gid),
+FOREIGN KEY (moid) REFERENCES movies(moid) ON DELETE CASCADE,
+FOREIGN KEY (gid) REFERENCES genres(gid) ON DELETE CASCADE
+) ENGINE = InnoDB CHARACTER SET utf8;
+
+CREATE TABLE orders
+(
+orid INT,
+shid INT,
+usid INT,
+tickets INT,
+price FLOAT,
+PRIMARY KEY (orid),
+FOREIGN KEY (shid) REFERENCES shows(shid),
+FOREIGN KEY (usid) REFERENCES users(usid)
+) ENGINE = InnoDB CHARACTER SET utf8;
