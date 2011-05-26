@@ -9,6 +9,7 @@ namespace cinemaXXX
 
 	public partial class masterpage : System.Web.UI.MasterPage
 	{
+		
 	}
 }
 
