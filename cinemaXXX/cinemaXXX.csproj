@@ -37,6 +37,8 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="MySql.Data, Version=5.2.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d" />
     <Reference Include="System.Data" />
+    <Reference Include="Mono.Data" />
+    <Reference Include="Mono.Posix" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
@@ -61,6 +63,7 @@
     <Compile Include="masterpage.master.designer.cs">
       <DependentUpon>masterpage.master</DependentUpon>
     </Compile>
+    <Compile Include="IOTools.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
