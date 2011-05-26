@@ -7,8 +7,7 @@
       <File FileName="cinemaXXX/style.css" Line="29" Column="2" />
       <File FileName="cinemaXXX/Default.aspx.cs" Line="12" Column="1" />
       <File FileName="cinemaXXX/Default.aspx.designer.cs" Line="21" Column="1" />
-      <File FileName="cinemaXXX/web.config" Line="31" Column="13" />
-      <File FileName="cinemaXXX/masterpage.master.cs" Line="14" Column="1" />
+      <File FileName="cinemaXXX/masterpage.master.cs" Line="4" Column="21" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
