@@ -1,15 +1,21 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" ctype="Workspace" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="cinemaXXX/IOTools.cs" ctype="Workbench">
-    <Files>
-      <File FileName="cinemaXXX/Default.aspx" Line="7" Column="15" />
-      <File FileName="cinemaXXX/masterpage.master" Line="22" Column="37" />
-      <File FileName="cinemaXXX/style.css" Line="29" Column="2" />
-      <File FileName="cinemaXXX/Default.aspx.cs" Line="12" Column="1" />
-      <File FileName="cinemaXXX/Default.aspx.designer.cs" Line="21" Column="1" />
-      <File FileName="cinemaXXX/masterpage.master.cs" Line="4" Column="21" />
-      <File FileName="cinemaXXX/IOTools.cs" Line="48" Column="2" />
-    </Files>
+  <MonoDevelop.Ide.Workbench ctype="Workbench">
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="cinemaXXX" expanded="True">
+            <Node name="References" expanded="True" />
+            <Node name="Default.aspx" expanded="True" />
+            <Node name="Global.asax" selected="True" />
+            <Node name="masterpage.master" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
