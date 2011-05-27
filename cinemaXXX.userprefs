@@ -1,14 +1,37 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" ctype="Workspace" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="cinemaXXX/masterpage.master.cs" ctype="Workbench">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assembly Browser" ctype="Workbench">
     <Files>
+      <File FileName="../sletmig/sletmig/master.master.cs" Line="1" Column="1" />
       <File FileName="cinemaXXX/Default.aspx" Line="7" Column="15" />
       <File FileName="cinemaXXX/masterpage.master" Line="22" Column="37" />
-      <File FileName="cinemaXXX/style.css" Line="29" Column="2" />
-      <File FileName="cinemaXXX/Default.aspx.cs" Line="12" Column="1" />
+      <File FileName="cinemaXXX/style.css" Line="1" Column="1" />
+      <File FileName="cinemaXXX/Default.aspx.cs" Line="1" Column="1" />
       <File FileName="cinemaXXX/Default.aspx.designer.cs" Line="21" Column="1" />
-      <File FileName="cinemaXXX/masterpage.master.cs" Line="4" Column="21" />
+      <File FileName="cinemaXXX/masterpage.master.cs" Line="12" Column="3" />
+      <File FileName="cinemaXXX/web.config" Line="12" Column="19" />
+      <File FileName="cinemaXXX/DataMaster.cs" Line="31" Column="3" />
+      <File FileName="cinemaXXX/Movie.cs" Line="18" Column="18" />
+      <File FileName="cinemaXXX/IOTools.cs" Line="1" Column="1" />
+      <File FileName="cinemaXXX/masterpage.master.designer.cs" Line="1" Column="1" />
+      <File FileName="cinemaXXX/Global.asax" Line="1" Column="1" />
+      <File FileName="Assembly Browser" />
     </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="cinemaXXX" expanded="True">
+            <Node name="References" expanded="True" selected="True">
+              <Node name="MySql.Data, Version=5.2.7.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d" expanded="True" />
+            </Node>
+            <Node name="masterpage.master" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
