@@ -1,6 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" ctype="Workspace" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="cinemaXXX/masterpage.master.cs" ctype="Workbench">
+  <MonoDevelop.Ide.Workbench ActiveDocument="cinemaXXX/IOTools.cs" ctype="Workbench">
     <Files>
       <File FileName="cinemaXXX/Default.aspx" Line="7" Column="15" />
       <File FileName="cinemaXXX/masterpage.master" Line="22" Column="37" />
@@ -8,6 +8,7 @@
       <File FileName="cinemaXXX/Default.aspx.cs" Line="12" Column="1" />
       <File FileName="cinemaXXX/Default.aspx.designer.cs" Line="21" Column="1" />
       <File FileName="cinemaXXX/masterpage.master.cs" Line="4" Column="21" />
+      <File FileName="cinemaXXX/IOTools.cs" Line="48" Column="2" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
