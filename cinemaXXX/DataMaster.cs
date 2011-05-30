@@ -1,37 +1,75 @@
 using MySql.Data;
 using MySql.Data.MySqlClient;
 using System;
+using System.Data;
 using System.Collections.Generic;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Configuration;
 
 namespace cinemaXXX
 {
 	public class DataMaster
 	{
 		
-		//quick and dirty to get things rolling, connection options should be stored in config later
-		static protected MySqlConnection dbcon;
-		static public MySqlConnection dbConnection() {	
-			if (!(dbcon is MySqlConnection)) {
-				dbcon = new MySqlConnection("Server=localhost;Database=cinemaxxx;User ID=root;Password=;Pooling=false");
-				dbcon.Open();
-			}
-			return dbcon;
-		}
-		
-		//protected Dictionary<string, object> _dbData;
-		//for easy debug access
-		public Dictionary<string, object> _dbData;
-		
-		//what is the main table behind this dataclass
-		protected string _dbTable;
-		
-		protected string _primaryKey;
+//select * from information_schema.KEY_COLUMN_USAGE where constraint_schema='cinemaxxx';
+
+/* 
+ * ----------------------------------------------------
+ * Beginning of constructors and initialisers
+ */
 		
 		public DataMaster ()
 		{
 			this._dbData = new Dictionary<string, object>();
 		}
 		
+		/* this we need to do to get things rollong, but can't do in the DataMasters constructor.
+		 * call this in the childs constructor
+		 */
+		protected bool _prepare() {
+			this.getSchema();
+			foreach (DataRow row in _dbSchemas[this._dbTable].Rows){
+				if ((bool) row["IsKey"]) {
+					this._primaryKey = row["ColumnName"].ToString();
+				}
+				//neccesary?
+				this._dbData.Add(row["ColumnName"].ToString(), new object());
+			}
+			return true;
+		}
+		
+		
+/* End of constructors and initialisers
+ * ----------------------------------------------------
+ * Beginning of definitions
+ */
+		
+		static private MySqlConnection _dbcon;
+		static public MySqlConnection dbConnection() {	
+			if (!(_dbcon is MySqlConnection)) {
+				_dbcon = new MySqlConnection(ConfigurationSettings.AppSettings["ConnectionInfo"]);
+				//_dbcon = new MySqlConnection(ConfigurationManager.AppSettings["ConnectionInfo"]);
+				///mnt/con-rw/home/heigren/Projects/cinemaxxx/cinemaXXX/DataMaster.cs(84,84): Warning CS0618: `System.Configuration.ConfigurationSettings.AppSettings' is obsolete: `This property is obsolete.  Please use System.Configuration.ConfigurationManager.AppSettings' (CS0618) (cinemaXXX)
+				_dbcon.Open();
+			}
+			return _dbcon;
+		}
+		
+		/* DataTable able to containg Schema info for all the tables
+		 */
+		static private Dictionary<string, DataTable> _dbSchemas = new Dictionary<string, DataTable>();
+		
+		/* Dictionary for our DB data, string is the column */
+		protected Dictionary<string, object> _dbData;
+		
+		/* what is the main table behind this dataclass */
+		protected string _dbTable;
+		
+		/* What is the primary key for this table */
+		private string _primaryKey;
+
+		/* get/set the id of the object, derived from _primaryKey */
 		public int id{
 			set {
 				if (this._dbData.ContainsKey(this._primaryKey)) {
@@ -46,6 +84,12 @@ namespace cinemaXXX
 			}
 		}
 		
+/* End of definitions
+ * ----------------------------------------------------
+ * Beginning of Database I/O
+ */
+		
+		/* fill the object with data for the current ID */
 		public bool get() {
 			string sql = "SELECT * FROM " + this._dbTable + " WHERE " + this._primaryKey + " = " + this._dbData[this._primaryKey];
 			MySqlCommand cmd = new MySqlCommand(sql, dbConnection());
@@ -55,18 +99,18 @@ namespace cinemaXXX
 				}
 			}
 			return true;
-		}
+		}	
 		
-		//this and getAllWhere needs to be non-static for proper polymorphism, or we won't be able to call spawn from the child
+		/* Get all records from the current table 
+		 * this and getAllWhere needs to be non-static for proper polymorphism, or we won't be able to call spawn from the child
+		 */
 		public Dictionary<int, DataMaster> getAll() {
 			return getAllWhere("1=1");
 		}
 		
-		virtual protected DataMaster spawn() {
-			return new DataMaster();
-		}
-		
-		//this needs to be non-static for proper polymorphism, or we won't be able to call spawn from the child
+		/* Get all records from the current table matching the supplied where clause
+		 * this needs to be non-static for proper polymorphism, or we won't be able to call spawn from the child
+		 */
 		protected Dictionary<int, DataMaster> getAllWhere(string sqlWhere) {
 			string sql = "SELECT * FROM " + this._dbTable + " WHERE "+sqlWhere;
 			MySqlCommand cmd = new MySqlCommand(sql, dbConnection());
@@ -81,56 +125,210 @@ namespace cinemaXXX
 			return dictionary;
 		}
 		
-		//add is reserved :(
-		//this one needs some serious beautification
-		// the whole datatype thing needs to be seperated
+		/* Insert (not update) the current object into the database
+		 * add is reserved :(
+		 */
 		public bool insert() {
 			string[] columns = new string[this._dbData.Count];
 			string[] values = new string[columns.Length];
-			//string cell;
 			int i = 0;
 			foreach (var column in this._dbData.Keys) {
 				columns[i] = column;
-				if (this._dbData[column] is string || this._dbData[column] is DateTime) {
-					values[i] = "'" + this._dbData[column] + "'";
-				} else {
-					if (this._dbData[column].ToString().Length == 0) {
-						values[i] = "NULL";
-					} else {
-						values[i] = this._dbData[column].ToString();
-					}
-				}
+				values[i] = this._dbEncapsulate(column);
 				i++;
 			}
 			
 			string sql = "INSERT INTO " + this._dbTable + " (" + string.Join(", ",columns) + ") VALUES (" + string.Join(", ",values) + ")";
 			MySqlCommand cmd = new MySqlCommand(sql, dbConnection());
-			//return (cmd.ExecuteNonQuery() == 1 ? true : false);
 			cmd.ExecuteNonQuery();
 			MySqlCommand incId = new MySqlCommand("select last_insert_id()", dbConnection());
+			//fix this
 			this.id = Convert.ToInt16(incId.ExecuteScalar());
 			return true;
 		}
 		
-		//work in progress, wait until there is a datatype function in place (look at insert())
+		/* Update the current object in the Database 
+		 */
 		public bool update() {
-			
-			return true;
+			string sql = "UPDATE " + this._dbTable + " SET \n";
+			int runs = this._dbData.Keys.Count;
+			int i = 1;
+			foreach (var field in this._dbData.Keys) {
+				sql += field + " = " + this._dbEncapsulate(field);
+				if (i++ < runs) {
+					sql += ",\n";
+				} else {
+					sql += "\n";
+				}
+			}
+			sql += "WHERE " + this._primaryKey + " = " + this._dbEncapsulate(this._primaryKey);
+			MySqlCommand cmd = new MySqlCommand(sql, dbConnection());
+			return (cmd.ExecuteNonQuery() == 1 ? true : false);
 		}
 		
+		/* Delete the current object from the Database */
 		public bool delete() {
 			string sql = "SELECT * FROM " + this._dbTable + " WHERE " + this._primaryKey + " = " + this.id;
 			MySqlCommand cmd = new MySqlCommand(sql, dbConnection());
 			return (cmd.ExecuteNonQuery() == 1 ? true : false);
 		}
+
+/* End of Database I/O
+ * ----------------------------------------------------
+ * Beginning of DB helper functions
+ */	
 		
-		private bool _readerFill(MySqlDataReader reader) {
-			this._dbData.Clear();
-			for(int i=0;i<reader.FieldCount;i++) {
-				this._dbData.Add(reader.GetName(i), reader[reader.GetName(i)]);
+		/* Make sure we have schema info for the current table
+		 */
+		public bool getSchema() {
+			if (!(_dbSchemas.ContainsKey(this._dbTable))) {
+				string sql = "SELECT * FROM " + this._dbTable + " LIMIT 1";
+				MySqlCommand cmd = new MySqlCommand(sql, dbConnection());
+				using (MySqlDataReader reader = cmd.ExecuteReader()) {
+					while(reader.Read()) {
+						_dbSchemas[this._dbTable] = reader.GetSchemaTable();
+					}
+				}
 			}
 			return true;
 		}
 		
+		/* Return a string for an SQL statement for the specified key
+		 * String and datatypes should be encapsulated with ''
+		 * Empty key values should return as string NULL
+		 */
+		private string _dbEncapsulate(string key) {
+			string returnString;
+			Type type = typeof(int);
+			
+			foreach (DataRow row in _dbSchemas[this._dbTable].Rows){
+				if ((string) row["ColumnName"] == key) {
+					type = Type.GetType(row["DataType"].ToString());
+					break;
+				}
+			}
+			
+			if (type == typeof(string) || type == typeof(DateTime)) {
+				returnString = "'" + this._dbData[key].ToString() + "'";
+			} else {
+				returnString = ((this._dbData[key].ToString().Length > 0) ? this._dbData[key].ToString() : "NULL");
+			}
+			return returnString;
+		}
+		
+		/*
+		 * fill _dbData from the specified MySqlDataReader position
+		 * Feth the schema for the current table if we don't already have it
+		 */
+		private bool _readerFill (MySqlDataReader reader)
+		{
+			if (!(_dbSchemas.ContainsKey(this._dbTable))) {
+				_dbSchemas[this._dbTable] = reader.GetSchemaTable();
+			}
+			this._dbData.Clear ();
+			for (int i = 0; i < reader.FieldCount; i++) {
+				this._dbData.Add (reader.GetName (i), reader[reader.GetName (i)]);
+			}
+			return true;
+		}
+		
+/* End of DB helper functions
+ * ----------------------------------------------------
+ * Beginning of I/O
+ * Use these to read/write to and from _dbTable
+ * To start locking variable names, create new similar functions in the child
+ */		
+ 
+ 	public object read(string key) {
+ 		return this._dbData[key];
+ 	}
+ 	
+ 	public bool write(string key, object input) {
+ 		this._dbData[key] = input;
+ 		return true;
+ 	}
+ 
+ /* End of IO
+ * ----------------------------------------------------
+ * Beginning of stuff
+ */		
+		
+		/* Virtual spawn method, overridden in children, so children can create new objects the same type as itself */
+		virtual protected DataMaster spawn() {
+			return new DataMaster();
+		}
+
+		/* Create and return a dynamic HTML input control, it's up to the programmer to make sure the ID's are unique */
+		static public WebControl createHtmlInputControl(object dataObject, string id) {
+			WebControl webControl;
+			if (dataObject is bool) {
+				CheckBox control = new CheckBox ();
+				control.Checked = (bool)dataObject;
+				webControl = control;
+			} else {
+				TextBox control = new TextBox ();
+				control.Text = dataObject.ToString ();
+				webControl = control;
+			}
+			webControl.ID = id;
+			return webControl;
+		}
+		
+		/* Have we already made a conrol with this ID? */
+		public bool webControlExists(WebControl container, string controlID) {
+        if (container != null && container.HasControls()) {
+            if (container.FindControl(controlID) != null){
+                return true;
+			}
+		}
+        return false;
+    	}
+		
+		/* Add a generated table to the specified placeholder */
+		public bool createPlaceHolderTable(PlaceHolder placeholder)
+		{
+			placeholder.Controls.Add(this.createTable());
+			return true;
+		}
+		
+		/* Create a table with input controls for the current database table */
+		public Table createTable()
+		{
+			Table table = new Table ();
+			foreach (var key in this._dbData.Keys)
+			{
+				TableRow row = new TableRow ();
+				
+				TableCell cellA = new TableCell ();
+				cellA.Text = key;
+				row.Cells.Add (cellA);
+				
+				TableCell cellB = new TableCell ();
+				cellB.Controls.Add (createHtmlInputControl(this._dbData[key], key));
+				row.Cells.Add (cellB);
+				table.Rows.Add (row);
+			}
+			return table;
+		}
+		
+		//work in progress
+		//create the opposite of createHtmlInputControl to handle control types when read
+		public bool fillObjectFromPlaceHolder(PlaceHolder placeholder) {
+			Control currentControl;
+			foreach(DataRow row in _dbSchemas[this._dbTable].Rows) {
+				currentControl = placeholder.FindControl((row["ColumnName"]).ToString());
+				if (currentControl is CheckBox) {
+					this._dbData[row["ColumnName"].ToString()] = ((CheckBox)currentControl).Checked;
+				} else if (currentControl is TextBox) {
+					this._dbData[row["ColumnName"].ToString()] = ((TextBox)currentControl).Text;
+				}
+			}
+			return true;
+		}
+		
+/* End of stuff
+ * ----------------------------------------------------
+ */		
+ 
 	}
 }
