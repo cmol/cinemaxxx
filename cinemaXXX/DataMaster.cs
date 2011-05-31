@@ -11,8 +11,6 @@ namespace cinemaXXX
 {
 	public class DataMaster
 	{
-		
-//select * from information_schema.KEY_COLUMN_USAGE where constraint_schema='cinemaxxx';
 
 /* 
  * ----------------------------------------------------
@@ -24,7 +22,7 @@ namespace cinemaXXX
 			this._dbData = new Dictionary<string, object>();
 		}
 		
-		/* this we need to do to get things rollong, but can't do in the DataMasters constructor.
+		/* things we need to do to get things rolling, but can't do in the DataMasters constructor.
 		 * call this in the childs constructor
 		 */
 		protected bool _prepare() {
@@ -46,9 +44,12 @@ namespace cinemaXXX
  */
 		
 		static private MySqlConnection _dbcon;
-		static public MySqlConnection dbConnection() {	
+		static public MySqlConnection dbConnection() {
 			if (!(_dbcon is MySqlConnection)) {
-				_dbcon = new MySqlConnection(ConfigurationSettings.AppSettings["ConnectionInfo"]);
+				string ConnectionInfo = "Server=" + ConfigurationSettings.AppSettings["DataBaseServer"] + ";Database=" + ConfigurationSettings.AppSettings["DataBaseName"] + "cinemaxxx;User ID=" + ConfigurationSettings.AppSettings["DataBaseUid"] + " root;Password=" + ConfigurationSettings.AppSettings["DataBasePasswd"] + ";Pooling=" + ConfigurationSettings.AppSettings["DataBasePooling"];
+			
+				_dbcon = new MySqlConnection(ConnectionInfo);
+				
 				//_dbcon = new MySqlConnection(ConfigurationManager.AppSettings["ConnectionInfo"]);
 				///mnt/con-rw/home/heigren/Projects/cinemaxxx/cinemaXXX/DataMaster.cs(84,84): Warning CS0618: `System.Configuration.ConfigurationSettings.AppSettings' is obsolete: `This property is obsolete.  Please use System.Configuration.ConfigurationManager.AppSettings' (CS0618) (cinemaXXX)
 				_dbcon.Open();
@@ -59,6 +60,8 @@ namespace cinemaXXX
 		/* DataTable able to containg Schema info for all the tables
 		 */
 		static private Dictionary<string, DataTable> _dbSchemas = new Dictionary<string, DataTable>();
+		
+		static private Dictionary<string, DataTable> _dbReferences = new Dictionary<string, DataTable>();
 		
 		/* Dictionary for our DB data, string is the column */
 		protected Dictionary<string, object> _dbData;
