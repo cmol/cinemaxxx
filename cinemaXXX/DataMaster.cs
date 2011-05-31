@@ -20,6 +20,10 @@ namespace cinemaXXX
 		public DataMaster ()
 		{
 			this._dbData = new Dictionary<string, object>();
+			if (_dbReferences.Count == 0) {
+			 	//TABLE_NAME,COLUMN_NAME,REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME from information_schema.KEY_COLUMN_USAGE where constraint_schema='cinemaxxx' AND REFERENCED_COLUMN_NAME is not NULL;
+				string sql = "SELECT * FROM information_schema.KEY_COLUMN_USAGE WHERE constraint_schema = '" + ConfigurationSettings.AppSettings["DataBaseName"] + "' AND REFERENCED_COLUMN_NAME IS NOT NULL";
+			}
 		}
 		
 		/* things we need to do to get things rolling, but can't do in the DataMasters constructor.
@@ -44,9 +48,9 @@ namespace cinemaXXX
  */
 		
 		static private MySqlConnection _dbcon;
-		static public MySqlConnection dbConnection() {
+		static private MySqlConnection dbConnection() {
 			if (!(_dbcon is MySqlConnection)) {
-				string ConnectionInfo = "Server=" + ConfigurationSettings.AppSettings["DataBaseServer"] + ";Database=" + ConfigurationSettings.AppSettings["DataBaseName"] + "cinemaxxx;User ID=" + ConfigurationSettings.AppSettings["DataBaseUid"] + " root;Password=" + ConfigurationSettings.AppSettings["DataBasePasswd"] + ";Pooling=" + ConfigurationSettings.AppSettings["DataBasePooling"];
+				string ConnectionInfo = "Server=" + ConfigurationSettings.AppSettings["DataBaseServer"] + ";Database=" + ConfigurationSettings.AppSettings["DataBaseName"] + ";User ID=" + ConfigurationSettings.AppSettings["DataBaseUid"] + ";Password=" + ConfigurationSettings.AppSettings["DataBasePasswd"] + ";Pooling=" + ConfigurationSettings.AppSettings["DataBasePooling"];
 			
 				_dbcon = new MySqlConnection(ConnectionInfo);
 				
@@ -61,7 +65,8 @@ namespace cinemaXXX
 		 */
 		static private Dictionary<string, DataTable> _dbSchemas = new Dictionary<string, DataTable>();
 		
-		static private Dictionary<string, DataTable> _dbReferences = new Dictionary<string, DataTable>();
+		/* used for multidimensional reference storage [tablename][columnnamewithref][reftargettable], columnname in source and target should be the same according to our db structure */
+		static private Dictionary<string, object> _dbReferences = new Dictionary<string, object>();
 		
 		/* Dictionary for our DB data, string is the column */
 		protected Dictionary<string, object> _dbData;
