@@ -191,6 +191,7 @@ namespace cinemaXXX
 		public bool getSchema() {
 			if (!(_dbSchemas.ContainsKey(this._dbTable))) {
 				string sql = "SELECT * FROM " + this._dbTable + " LIMIT 1";
+				//throw new Exception(sql);
 				MySqlCommand cmd = new MySqlCommand(sql, dbConnection());
 				using (MySqlDataReader reader = cmd.ExecuteReader()) {
 					while(reader.Read()) {
@@ -216,8 +217,10 @@ namespace cinemaXXX
 				}
 			}
 			
-			if (type == typeof(string) || type == typeof(DateTime)) {
+			if (type == typeof(string)) {
 				returnString = "'" + this._dbData[key].ToString() + "'";
+			} else if (type == typeof(DateTime)) {
+				returnString = "'" + IOTools.stringToDateTime(this._dbData[key].ToString()).ToString("yyyy/MM/dd HH:mm:ss") + "'";
 			} else {
 				returnString = ((this._dbData[key].ToString().Length > 0) ? this._dbData[key].ToString() : "NULL");
 			}
