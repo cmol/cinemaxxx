@@ -20,9 +20,33 @@ namespace cinemaXXX
 		public DataMaster ()
 		{
 			this._dbData = new Dictionary<string, object>();
+			/* get the foreign key references in all the tables, quick and easy */
 			if (_dbReferences.Count == 0) {
 			 	//TABLE_NAME,COLUMN_NAME,REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME from information_schema.KEY_COLUMN_USAGE where constraint_schema='cinemaxxx' AND REFERENCED_COLUMN_NAME is not NULL;
 				string sql = "SELECT * FROM information_schema.KEY_COLUMN_USAGE WHERE constraint_schema = '" + ConfigurationSettings.AppSettings["DataBaseName"] + "' AND REFERENCED_COLUMN_NAME IS NOT NULL";
+				MySqlCommand cmd = new MySqlCommand(sql, dbConnection());
+				using (MySqlDataReader reader = cmd.ExecuteReader()) {
+					while(reader.Read()) {
+						_dbReferences[reader["TABLE_NAME"].ToString()][reader["REFERENCED_COLUMN_NAME"].ToString()] = reader["REFERENCED_TABLE_NAME"].ToString();
+						if (_dbReferences.ContainsKey(reader["TABLE_NAME"].ToString())) {
+							((Dictionary<string, string>)_dbReferences[reader["TABLE_NAME"].ToString()]).Add(
+								reader["REFERENCED_COLUMN_NAME"].ToString(), 
+								reader["REFERENCED_TABLE_NAME"].ToString()
+							);
+						} else {
+							Dictionary<string, string> reference = new Dictionary<string, string>();
+							reference.Add(reader["REFERENCED_COLUMN_NAME"].ToString(), reader["REFERENCED_TABLE_NAME"].ToString());
+							_dbReferences.Add(reader["TABLE_NAME"].ToString(), reference);
+						}
+						/*
+						 * Hvis det nu bare havde været PHP
+						 * _dbReferences
+						 * 		[reader["TABLE_NAME"]]
+						 * 		[reader["REFERENCED_COLUMN_NAME"]] =
+						 * 			reader["REFERENCED_TABLE_NAME"];
+						 * */
+					}
+				}
 			}
 		}
 		
@@ -66,7 +90,7 @@ namespace cinemaXXX
 		static private Dictionary<string, DataTable> _dbSchemas = new Dictionary<string, DataTable>();
 		
 		/* used for multidimensional reference storage [tablename][columnnamewithref][reftargettable], columnname in source and target should be the same according to our db structure */
-		static private Dictionary<string, object> _dbReferences = new Dictionary<string, object>();
+		static private Dictionary<string, Dictionary<string,string>> _dbReferences = new Dictionary<string, Dictionary<string, string>>();
 		
 		/* Dictionary for our DB data, string is the column */
 		protected Dictionary<string, object> _dbData;
@@ -191,7 +215,6 @@ namespace cinemaXXX
 		public bool getSchema() {
 			if (!(_dbSchemas.ContainsKey(this._dbTable))) {
 				string sql = "SELECT * FROM " + this._dbTable + " LIMIT 1";
-				//throw new Exception(sql);
 				MySqlCommand cmd = new MySqlCommand(sql, dbConnection());
 				using (MySqlDataReader reader = cmd.ExecuteReader()) {
 					while(reader.Read()) {
@@ -217,10 +240,8 @@ namespace cinemaXXX
 				}
 			}
 			
-			if (type == typeof(string)) {
+			if (type == typeof(string) || type == typeof(DateTime)) {
 				returnString = "'" + this._dbData[key].ToString() + "'";
-			} else if (type == typeof(DateTime)) {
-				returnString = "'" + IOTools.stringToDateTime(this._dbData[key].ToString()).ToString("yyyy/MM/dd HH:mm:ss") + "'";
 			} else {
 				returnString = ((this._dbData[key].ToString().Length > 0) ? this._dbData[key].ToString() : "NULL");
 			}
