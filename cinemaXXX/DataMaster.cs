@@ -240,8 +240,10 @@ namespace cinemaXXX
 				}
 			}
 			
-			if (type == typeof(string) || type == typeof(DateTime)) {
+			if (type == typeof(string)) {
 				returnString = "'" + this._dbData[key].ToString() + "'";
+			} else if (type == typeof(DateTime)) {
+				returnString = "'" + IOTools.stringToDateTime(this._dbData[key].ToString()).ToString("yyyy/MM/dd HH:mm:ss") + "'";
 			} else {
 				returnString = ((this._dbData[key].ToString().Length > 0) ? this._dbData[key].ToString() : "NULL");
 			}
