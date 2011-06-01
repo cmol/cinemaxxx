@@ -215,6 +215,7 @@ namespace cinemaXXX
 		public bool getSchema() {
 			if (!(_dbSchemas.ContainsKey(this._dbTable))) {
 				string sql = "SELECT * FROM " + this._dbTable + " LIMIT 1";
+				//throw new Exception(sql);
 				MySqlCommand cmd = new MySqlCommand(sql, dbConnection());
 				using (MySqlDataReader reader = cmd.ExecuteReader()) {
 					while(reader.Read()) {
