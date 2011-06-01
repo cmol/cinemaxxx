@@ -86,7 +86,8 @@ namespace cinemaXXX
 		
 		/* DataTable able to containg Schema info for all the tables
 		 */
-		static private Dictionary<string, DataTable> _dbSchemas = new Dictionary<string, DataTable>();
+		//static private Dictionary<string, DataTable> _dbSchemas = new Dictionary<string, DataTable>();
+		static public Dictionary<string, DataTable> _dbSchemas = new Dictionary<string, DataTable>();
 		
 		/* used for multidimensional reference storage [tablename][columnnamewithref][reftargettable], columnname in source and target should be the same according to our db structure */
 		static private Dictionary<string, Dictionary<string,string>> _dbReferences = new Dictionary<string, Dictionary<string, string>>();
@@ -252,7 +253,7 @@ namespace cinemaXXX
 		
 		/*
 		 * fill _dbData from the specified MySqlDataReader position
-		 * Feth the schema for the current table if we don't already have it
+		 * Fetch the schema for the current table if we don't already have it
 		 */
 		private bool _readerFill (MySqlDataReader reader)
 		{
@@ -292,23 +293,36 @@ namespace cinemaXXX
 			return new DataMaster();
 		}
 
-		/* Create and return a dynamic HTML input control, it's up to the programmer to make sure the ID's are unique */
-		static public WebControl createHtmlInputControl(object dataObject, string id) {
+		/* Create a dynamic HTML input control for the provided key, it's up to the programmer to make sure the ID's are unique */
+		public WebControl createHtmlInputControl(string key, string id) {
+			Type type = typeof(int);
+			int length = 0;
 			WebControl webControl;
-			if (dataObject is bool) {
+			foreach (DataRow row in _dbSchemas[this._dbTable].Rows){
+				if ((string) row["ColumnName"] == key) {
+					type = Type.GetType(row["DataType"].ToString());
+					length = (int) row["ColumnSize"];
+					break;
+				}
+			}
+			
+			if (type ==typeof(bool)) {
 				CheckBox control = new CheckBox ();
-				control.Checked = (bool)dataObject;
+				control.Checked = (bool)this._dbData[key];
 				webControl = control;
 			} else {
 				TextBox control = new TextBox ();
-				control.Text = dataObject.ToString ();
+				control.Text = this._dbData[key].ToString();
+				if (length > 255) {
+					control.TextMode = TextBoxMode.MultiLine;
+				}
 				webControl = control;
 			}
 			webControl.ID = id;
 			return webControl;
 		}
-		
-		/* Have we already made a conrol with this ID? */
+	
+		/* Have we already made a control with this ID? */
 		public bool webControlExists(WebControl container, string controlID) {
         if (container != null && container.HasControls()) {
             if (container.FindControl(controlID) != null){
@@ -338,7 +352,7 @@ namespace cinemaXXX
 				row.Cells.Add (cellA);
 				
 				TableCell cellB = new TableCell ();
-				cellB.Controls.Add (createHtmlInputControl(this._dbData[key], key));
+				cellB.Controls.Add (this.createHtmlInputControl(key, key));
 				row.Cells.Add (cellB);
 				table.Rows.Add (row);
 			}
