@@ -27,7 +27,6 @@ namespace cinemaXXX
 				MySqlCommand cmd = new MySqlCommand(sql, dbConnection());
 				using (MySqlDataReader reader = cmd.ExecuteReader()) {
 					while(reader.Read()) {
-						_dbReferences[reader["TABLE_NAME"].ToString()][reader["REFERENCED_COLUMN_NAME"].ToString()] = reader["REFERENCED_TABLE_NAME"].ToString();
 						if (_dbReferences.ContainsKey(reader["TABLE_NAME"].ToString())) {
 							((Dictionary<string, string>)_dbReferences[reader["TABLE_NAME"].ToString()]).Add(
 								reader["REFERENCED_COLUMN_NAME"].ToString(), 
