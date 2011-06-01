@@ -20,6 +20,34 @@ namespace cinemaXXX
 		public DataMaster ()
 		{
 			this._dbData = new Dictionary<string, object>();
+			/* get the foreign key references in all the tables, quick and easy */
+			if (_dbReferences.Count == 0) {
+			 	//TABLE_NAME,COLUMN_NAME,REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME from information_schema.KEY_COLUMN_USAGE where constraint_schema='cinemaxxx' AND REFERENCED_COLUMN_NAME is not NULL;
+				string sql = "SELECT * FROM information_schema.KEY_COLUMN_USAGE WHERE constraint_schema = '" + ConfigurationSettings.AppSettings["DataBaseName"] + "' AND REFERENCED_COLUMN_NAME IS NOT NULL";
+				MySqlCommand cmd = new MySqlCommand(sql, dbConnection());
+				using (MySqlDataReader reader = cmd.ExecuteReader()) {
+					while(reader.Read()) {
+						_dbReferences[reader["TABLE_NAME"].ToString()][reader["REFERENCED_COLUMN_NAME"].ToString()] = reader["REFERENCED_TABLE_NAME"].ToString();
+						if (_dbReferences.ContainsKey(reader["TABLE_NAME"].ToString())) {
+							((Dictionary<string, string>)_dbReferences[reader["TABLE_NAME"].ToString()]).Add(
+								reader["REFERENCED_COLUMN_NAME"].ToString(), 
+								reader["REFERENCED_TABLE_NAME"].ToString()
+							);
+						} else {
+							Dictionary<string, string> reference = new Dictionary<string, string>();
+							reference.Add(reader["REFERENCED_COLUMN_NAME"].ToString(), reader["REFERENCED_TABLE_NAME"].ToString());
+							_dbReferences.Add(reader["TABLE_NAME"].ToString(), reference);
+						}
+						/*
+						 * Hvis det nu bare havde været PHP
+						 * _dbReferences
+						 * 		[reader["TABLE_NAME"]]
+						 * 		[reader["REFERENCED_COLUMN_NAME"]] =
+						 * 			reader["REFERENCED_TABLE_NAME"];
+						 * */
+					}
+				}
+			}
 		}
 		
 		/* things we need to do to get things rolling, but can't do in the DataMasters constructor.
@@ -44,7 +72,7 @@ namespace cinemaXXX
  */
 		
 		static private MySqlConnection _dbcon;
-		static public MySqlConnection dbConnection() {
+		static private MySqlConnection dbConnection() {
 			if (!(_dbcon is MySqlConnection)) {
 				string ConnectionInfo = "Server=" + ConfigurationSettings.AppSettings["DataBaseServer"] + ";Database=" + ConfigurationSettings.AppSettings["DataBaseName"] + ";User ID=" + ConfigurationSettings.AppSettings["DataBaseUid"] + ";Password=" + ConfigurationSettings.AppSettings["DataBasePasswd"] + ";Pooling=" + ConfigurationSettings.AppSettings["DataBasePooling"];
 			
@@ -61,7 +89,8 @@ namespace cinemaXXX
 		 */
 		static private Dictionary<string, DataTable> _dbSchemas = new Dictionary<string, DataTable>();
 		
-		static private Dictionary<string, DataTable> _dbReferences = new Dictionary<string, DataTable>();
+		/* used for multidimensional reference storage [tablename][columnnamewithref][reftargettable], columnname in source and target should be the same according to our db structure */
+		static private Dictionary<string, Dictionary<string,string>> _dbReferences = new Dictionary<string, Dictionary<string, string>>();
 		
 		/* Dictionary for our DB data, string is the column */
 		protected Dictionary<string, object> _dbData;
