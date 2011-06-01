@@ -24,11 +24,8 @@ namespace cinemaXXX
 					HttpContext.Current.Session["UserToken"] = (User) users[key];
 					return (User) users[key];
 				}
-				return null;
 			}
-			else {
-				return null;
-			}
+			return null;
 		}
 		
 		override protected DataMaster spawn() {
