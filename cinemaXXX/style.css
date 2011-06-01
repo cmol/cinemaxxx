@@ -23,6 +23,18 @@
 	font-weight: bold;
 }
 
+#ctl00_loginBox {
+	float: right;
+	text-align: left;
+	position: relative;
+	top: -30px;
+}
+
+#ctl00_loginBox span {
+	font-size: 100%;
+	font-weight: bold;
+}
+
 #main 
 {
   background-color: #123456;
