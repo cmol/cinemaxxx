@@ -75,11 +75,7 @@ namespace cinemaXXX
 		static private MySqlConnection dbConnection() {
 			if (!(_dbcon is MySqlConnection)) {
 				string ConnectionInfo = "Server=" + ConfigurationSettings.AppSettings["DataBaseServer"] + ";Database=" + ConfigurationSettings.AppSettings["DataBaseName"] + ";User ID=" + ConfigurationSettings.AppSettings["DataBaseUid"] + ";Password=" + ConfigurationSettings.AppSettings["DataBasePasswd"] + ";Pooling=" + ConfigurationSettings.AppSettings["DataBasePooling"];
-			
 				_dbcon = new MySqlConnection(ConnectionInfo);
-				
-				//_dbcon = new MySqlConnection(ConfigurationManager.AppSettings["ConnectionInfo"]);
-				///mnt/con-rw/home/heigren/Projects/cinemaxxx/cinemaXXX/DataMaster.cs(84,84): Warning CS0618: `System.Configuration.ConfigurationSettings.AppSettings' is obsolete: `This property is obsolete.  Please use System.Configuration.ConfigurationManager.AppSettings' (CS0618) (cinemaXXX)
 				_dbcon.Open();
 			}
 			return _dbcon;
