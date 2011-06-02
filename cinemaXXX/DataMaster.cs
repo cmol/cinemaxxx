@@ -8,6 +8,59 @@ using System.Web.UI.WebControls;
 using System.Configuration;
 using System.Reflection;
 
+/* cinemaXXX
+ * 
+ * Write clever stuff here
+ * 
+ * Database structure rules
+ * *. Every table must have a primary key, this primary key can only cover a single column
+ * *. This primary key is the row identity for that particular row.
+ * *. The name of that field must be used in other tables, when that field is a reference. references must use this name.
+ * 
+ * NameSpace structure
+ * *. Class names must be uppercase CamelCase
+ * *. Members must be lowercase camelCase
+ * *. Protected/private stuff must begin with an underscore
+ * *. All methods must have a return type. If no object is to be returned, the method should return true/false, indicating success/failiure
+ * 
+ */
+
+
+
+ /*
+ * DataMaster class, all classess accessing the main database directly must inherit from DataMaster
+ * Every table in the Database should have an associated class
+ * 
+ * Be mindful when using/creating public static methods, as quite a bit of the functionality here expects certain preparations to have already been made
+ * 
+ * This is the basic, and mandatory structure/content of an inherited class
+ * -----------------------------------------------------
+using System;
+using System.Data;
+using System.Collections.Generic;
+
+namespace cinemaXXX
+{
+	// See DataMaster instructions
+	public class CLASSNAME : DataMaster
+	{
+		//what is the main table behind this dataclass
+		new private static string _dbTable = "TABLENAMEFORTHISCLASS";
+		
+		public CLASSNAME ()
+		{
+			base._dbTable = _dbTable;
+			base._prepare();
+		}
+		
+		override protected DataMaster spawn() {
+			return new CLASSNAME();
+		}
+	}
+}
+ * ----------------------------------------------------- 
+ */
+
 namespace cinemaXXX
 {
 	public partial class DataMaster
@@ -23,7 +76,6 @@ namespace cinemaXXX
 			this._dbData = new Dictionary<string, object>();
 			/* get the foreign key references in all the tables, quick and easy */
 			if (_dbReferences.Count == 0) {
-			 	//TABLE_NAME,COLUMN_NAME,REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME from information_schema.KEY_COLUMN_USAGE where constraint_schema='cinemaxxx' AND REFERENCED_COLUMN_NAME is not NULL;
 				string sql = "SELECT * FROM information_schema.KEY_COLUMN_USAGE WHERE constraint_schema = '" + ConfigurationSettings.AppSettings["DataBaseName"] + "' AND REFERENCED_COLUMN_NAME IS NOT NULL";
 				MySqlCommand cmd = new MySqlCommand(sql, dbConnection());
 				using (MySqlDataReader reader = cmd.ExecuteReader()) {
@@ -38,13 +90,6 @@ namespace cinemaXXX
 							reference.Add(reader["REFERENCED_COLUMN_NAME"].ToString(), reader["REFERENCED_TABLE_NAME"].ToString());
 							_dbReferences.Add(reader["TABLE_NAME"].ToString(), reference);
 						}
-						/*
-						 * Hvis det nu bare havde været PHP
-						 * _dbReferences
-						 * 		[reader["TABLE_NAME"]]
-						 * 		[reader["REFERENCED_COLUMN_NAME"]] =
-						 * 			reader["REFERENCED_TABLE_NAME"];
-						 * */
 					}
 				}
 			}
@@ -71,6 +116,7 @@ namespace cinemaXXX
  * Beginning of definitions
  */
 		
+		/* Standard MySql connection */
 		static private MySqlConnection _dbcon;
 		static private MySqlConnection dbConnection() {
 			if (!(_dbcon is MySqlConnection)) {
@@ -81,7 +127,9 @@ namespace cinemaXXX
 			return _dbcon;
 		}
 		
-		/* DataTable able to containg Schema info for all the tables
+		/* DataTable able to contain Schema info for all the tables
+		 * It is important that the schema be present on the table key for the current object, so _prepare makes sure it's there
+		 * Dictionary key is the table name
 		 */
 		//static private Dictionary<string, DataTable> _dbSchemas = new Dictionary<string, DataTable>();
 		static public Dictionary<string, DataTable> _dbSchemas = new Dictionary<string, DataTable>();
@@ -89,13 +137,20 @@ namespace cinemaXXX
 		/* used for multidimensional reference storage [tablename][columnnamewithref][reftargettable], columnname in source and target should be the same according to our db structure */
 		static private Dictionary<string, Dictionary<string,string>> _dbReferences = new Dictionary<string, Dictionary<string, string>>();
 		
-		/* Dictionary for our DB data, string is the column */
+		/* Dictionary for our DB data 
+		 * Data in this object shouldn't be accessed hardcoded by key reference from outside the corrosponding class, but through the read an write functions, so database column names can be changed without affecting the application source/binaries
+		 * Dictionary key is the column name
+		 */
 		protected Dictionary<string, object> _dbData;
 		
-		/* what is the main table behind this dataclass */
+		/* What is the main table behind this dataclass
+		 * Will be set by the inhereted class when it is instantiated
+		 */
 		protected string _dbTable;
 		
-		/* What is the primary key for this table */
+		/* What is the primary key for this table 
+		 * Will be set when the inherited class is instantiated
+		 */
 		private string _primaryKey;
 
 		/* get/set the id of the object, derived from _primaryKey */
@@ -207,7 +262,7 @@ namespace cinemaXXX
  * Beginning of DB helper functions
  */	
 		
-		/* Make sure we have schema info for the current table
+		/* Make sure we have schema info for the current table. It is important that this is present, so this is called from _prepare
 		 */
 		public bool getSchema() {
 			if (!(_dbSchemas.ContainsKey(this._dbTable))) {
@@ -226,6 +281,7 @@ namespace cinemaXXX
 		/* Return a string for an SQL statement for the specified key
 		 * String and datatypes should be encapsulated with ''
 		 * Empty key values should return as string NULL
+		 * No db input data is ever validated for injection etc. this would be a good place to do it
 		 */
 		private string _dbEncapsulate(string key) {
 			string returnString;
@@ -250,7 +306,7 @@ namespace cinemaXXX
 		
 		/*
 		 * fill _dbData from the specified MySqlDataReader position
-		 * Fetch the schema for the current table if we don't already have it
+		 * Fetch the schema for the current table if we don't already have it (we should have)
 		 */
 		private bool _readerFill (MySqlDataReader reader)
 		{
@@ -264,10 +320,14 @@ namespace cinemaXXX
 			return true;
 		}
 		
+		/* Is this key a foreign key? meening there is a primary key in som table there is a reference to this one? 
+		 */
 		private bool _isForeignKey(string key) {
 			return DataMaster._dbReferences[this._dbTable].ContainsKey(key);
 		}
 		
+		/* If this key is a foreign key, then in which table is the "master" for this reference? 
+		 */
 		private string _foreignKeyTable(string key) {
 			if (!DataMaster._dbReferences[this._dbTable].ContainsKey(key)) return null;
 			return DataMaster._dbReferences[this._dbTable][key];
@@ -301,7 +361,7 @@ namespace cinemaXXX
 			return new DataMaster();
 		}
 
-		/* Create a dynamic HTML input control for the provided key, it's up to the programmer to make sure the ID's are unique */
+		/* Create a dynamic HTML input control for the provided key, it's up to the programmer to make sure the ID's on a page are unique */
 		public WebControl createHtmlInputControl(string key, string id) {
 			Type type = typeof(int);
 			int length = 0;
@@ -314,8 +374,6 @@ namespace cinemaXXX
 				}
 			}
 			
-			
-			
 			if (type ==typeof(bool)) {
 				CheckBox control = new CheckBox ();
 				control.Checked = (bool)this._dbData[key];
@@ -326,7 +384,7 @@ namespace cinemaXXX
 				    DropDownList control = new DropDownList();
 
 					DataMaster tmpObj = DataMaster.spawnTableClass(this._foreignKeyTable(key));
-					
+
 					var elements = tmpObj.getAll();
 					foreach (var elementkey in elements.Keys){
 						ListItem li = new ListItem();
@@ -400,7 +458,10 @@ namespace cinemaXXX
 			return true;
 		}
 		
-		// Find the class belonging to the provided table, and return an object of that class
+		/* Find the class belonging to the provided table, and return an object of that class
+		 * Usefull when you want the data that is being referenced, and not just the id
+		 * A bit heavy, it needs to instantiate the classes one by one, until it reaches the matching class
+		 */
 		public static DataMaster spawnTableClass(string table) {
 			Assembly assembly = Assembly.GetExecutingAssembly();
 			var types = assembly.GetTypes();
