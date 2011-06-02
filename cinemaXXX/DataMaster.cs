@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Configuration;
+using System.Reflection;
 
 namespace cinemaXXX
 {
-	public class DataMaster
+	public partial class DataMaster
 	{
 
 /* 
@@ -267,6 +268,15 @@ namespace cinemaXXX
 			return true;
 		}
 		
+		private bool _isForeignKey(string key) {
+			return DataMaster._dbReferences[this._dbTable].ContainsKey(key);
+		}
+		
+		private string _foreignKeyTable(string key) {
+			if (!DataMaster._dbReferences[this._dbTable].ContainsKey(key)) return null;
+			return DataMaster._dbReferences[this._dbTable][key];
+		}
+		
 /* End of DB helper functions
  * ----------------------------------------------------
  * Beginning of I/O
@@ -288,7 +298,9 @@ namespace cinemaXXX
  * Beginning of stuff
  */		
 		
-		/* Virtual spawn method, overridden in children, so children can create new objects the same type as itself */
+		/* Virtual spawn method, overridden in children, so children can create new objects the same type as itself
+		 * This could be replaced by the newer spawnTableClass, and spawn() could subsequently be removed from inherited classes, although spawnTableClass is a bit heavier than this one 
+		  */
 		virtual protected DataMaster spawn() {
 			return new DataMaster();
 		}
@@ -306,17 +318,35 @@ namespace cinemaXXX
 				}
 			}
 			
+			
+			
 			if (type ==typeof(bool)) {
 				CheckBox control = new CheckBox ();
 				control.Checked = (bool)this._dbData[key];
 				webControl = control;
 			} else {
-				TextBox control = new TextBox ();
-				control.Text = this._dbData[key].ToString();
-				if (length > 255) {
-					control.TextMode = TextBoxMode.MultiLine;
+				if (this._isForeignKey(key)) {
+					/* SELECTS! */
+				    DropDownList control = new DropDownList();
+
+					DataMaster tmpObj = DataMaster.spawnTableClass(this._foreignKeyTable(key));
+					
+					var elements = tmpObj.getAll();
+					foreach (var elementkey in elements.Keys){
+						ListItem li = new ListItem();
+						li.Value = elementkey.ToString();
+						li.Text = elements[elementkey].read("title").ToString();
+						control.Items.Add(li);
+					}
+				    webControl = control;
+				} else {
+					TextBox control = new TextBox ();
+					control.Text = this._dbData[key].ToString();
+					if (length > 255) {
+						control.TextMode = TextBoxMode.MultiLine;
+					}
+					webControl = control;
 				}
-				webControl = control;
 			}
 			webControl.ID = id;
 			return webControl;
@@ -372,6 +402,21 @@ namespace cinemaXXX
 				}
 			}
 			return true;
+		}
+		
+		// Find the class belonging to the provided table, and return an object of that class
+		public static DataMaster spawnTableClass(string table) {
+			Assembly assembly = Assembly.GetExecutingAssembly();
+			var types = assembly.GetTypes();
+			foreach (Type type in types) {
+				if (type.IsSubclassOf(typeof(DataMaster))) {
+					DataMaster tmpObject = (DataMaster)Activator.CreateInstance(type);
+					if (tmpObject._dbTable == table) {
+						return tmpObject;
+					}
+				}
+			}
+			return null;
 		}
 		
 /* End of stuff
