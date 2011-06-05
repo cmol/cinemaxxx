@@ -8,7 +8,7 @@ namespace cinemaXXX
 	public class User : DataMaster
 	{
 		//what is the main table behind this dataclass
-		new private string _dbTable = "users";
+		new private static string _dbTable = "users";
 		
 		public User ()
 		{
