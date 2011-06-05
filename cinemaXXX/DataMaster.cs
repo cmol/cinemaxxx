@@ -195,7 +195,7 @@ namespace cinemaXXX
 		/* Get all records from the current table matching the supplied where clause
 		 * this needs to be non-static for proper polymorphism, or we won't be able to call spawn from the child
 		 */
-		protected Dictionary<int, DataMaster> getAllWhere(string sqlWhere) {
+		public Dictionary<int, DataMaster> getAllWhere(string sqlWhere) {
 			string sql = "SELECT * FROM " + this._dbTable + " WHERE "+sqlWhere;
 			MySqlCommand cmd = new MySqlCommand(sql, dbConnection());
 			Dictionary<int, DataMaster> dictionary = new Dictionary<int, DataMaster>();
