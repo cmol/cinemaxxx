@@ -15,6 +15,8 @@ namespace cinemaXXX {
 		
 		protected System.Web.UI.WebControls.ContentPlaceHolder head;
 		
+		protected System.Web.UI.WebControls.PlaceHolder loginBox;
+		
 		protected System.Web.UI.WebControls.ContentPlaceHolder ContentPlaceHolder;
 	}
 }

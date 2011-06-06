@@ -27,7 +27,6 @@ namespace cinemaXXX
 				MySqlCommand cmd = new MySqlCommand(sql, dbConnection());
 				using (MySqlDataReader reader = cmd.ExecuteReader()) {
 					while(reader.Read()) {
-						_dbReferences[reader["TABLE_NAME"].ToString()][reader["REFERENCED_COLUMN_NAME"].ToString()] = reader["REFERENCED_TABLE_NAME"].ToString();
 						if (_dbReferences.ContainsKey(reader["TABLE_NAME"].ToString())) {
 							((Dictionary<string, string>)_dbReferences[reader["TABLE_NAME"].ToString()]).Add(
 								reader["REFERENCED_COLUMN_NAME"].ToString(), 
@@ -311,12 +310,12 @@ namespace cinemaXXX
 		
 		/* Have we already made a conrol with this ID? */
 		public bool webControlExists(WebControl container, string controlID) {
-        if (container != null && container.HasControls()) {
-            if (container.FindControl(controlID) != null){
-                return true;
+        	if (container != null && container.HasControls()) {
+        	    if (container.FindControl(controlID) != null){
+         	       return true;
+				}
 			}
-		}
-        return false;
+        	return false;
     	}
 		
 		/* Add a generated table to the specified placeholder */
@@ -360,6 +359,7 @@ namespace cinemaXXX
 			}
 			return true;
 		}
+		
 		
 /* End of stuff
  * ----------------------------------------------------

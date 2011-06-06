@@ -12,6 +12,9 @@
 	<div id="wrapper">
 		<div id="header">
 			<span>This is the head</span>
+			<div id="loginDiv">
+				<asp:PlaceHolder id="loginBox" runat="server" />
+			</div>
 		</div>
 		<div id="main">
 			<div id="navigation">
