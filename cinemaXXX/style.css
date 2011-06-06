@@ -90,3 +90,12 @@
     background-color: #159;
     height: 15px;
 }
+
+.presentationFloatLeft {
+	float:	left;
+	padding-right:	20px;
+}
+
+.presentationFloatRight{
+	float:	right;
+}

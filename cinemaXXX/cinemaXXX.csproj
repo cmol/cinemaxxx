@@ -49,6 +49,7 @@
     <Content Include="masterpage.master" />
     <Content Include="style.css" />
     <Content Include="movie_prototype.aspx" />
+    <Content Include="show_movie.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">
@@ -79,6 +80,12 @@
     <Compile Include="User.cs" />
     <Compile Include="LoginHelper.cs" />
     <Compile Include="PG.cs" />
+    <Compile Include="show_movie.aspx.cs">
+      <DependentUpon>show_movie.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="show_movie.aspx.designer.cs">
+      <DependentUpon>show_movie.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
