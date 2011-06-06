@@ -8,7 +8,7 @@ namespace cinemaXXX
 	public class User : DataMaster
 	{
 		//what is the main table behind this dataclass
-		new private string _dbTable = "users";
+		new private static string _dbTable = "users";
 		
 		public User ()
 		{
@@ -24,11 +24,8 @@ namespace cinemaXXX
 					HttpContext.Current.Session["UserToken"] = (User) users[key];
 					return (User) users[key];
 				}
-				return null;
 			}
-			else {
-				return null;
-			}
+			return null;
 		}
 		
 		override protected DataMaster spawn() {

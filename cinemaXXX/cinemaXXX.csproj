@@ -77,7 +77,11 @@
     </Compile>
     <Compile Include="People.cs" />
     <Compile Include="User.cs" />
+<<<<<<< HEAD
     <Compile Include="LoginHelper.cs" />
+=======
+    <Compile Include="PG.cs" />
+>>>>>>> 70aba82954e634db9e102d695736d8dd5b701f35
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
