@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head runat="server">
-	<title>MasterPage</title>
+	<title>CinemaXXX</title>
 	<asp:contentplaceholder id="head" runat="server" />
 	<link rel="StyleSheet" type="text/css" href="style.css" />
 </head>
