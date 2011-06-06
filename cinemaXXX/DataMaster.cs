@@ -408,12 +408,12 @@ namespace cinemaXXX
 	
 		/* Have we already made a control with this ID? */
 		public bool webControlExists(WebControl container, string controlID) {
-        if (container != null && container.HasControls()) {
-            if (container.FindControl(controlID) != null){
-                return true;
+        	if (container != null && container.HasControls()) {
+        	    if (container.FindControl(controlID) != null){
+         	       return true;
+				}
 			}
-		}
-        return false;
+        	return false;
     	}
 		
 		/* Add a generated table to the specified placeholder */

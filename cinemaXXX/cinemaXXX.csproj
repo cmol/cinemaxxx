@@ -78,6 +78,7 @@
     </Compile>
     <Compile Include="People.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="LoginHelper.cs" />
     <Compile Include="PG.cs" />
     <Compile Include="show_movie.aspx.cs">
       <DependentUpon>show_movie.aspx</DependentUpon>

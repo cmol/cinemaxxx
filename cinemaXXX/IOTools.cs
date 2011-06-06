@@ -18,7 +18,7 @@ namespace cinemaXXX
 			return unixEpoch.AddSeconds(dt);
 		}
 		
-		// Takes strings in the form of "YYYY/MM/DD", "YYYY/MM/DD HH:MM:SS" or "MM/DD/YYYY", "MM/DD/YYYY HH:MM:SS" and returns a DateTime
+		// Takes strings in the form of "YYYY/MM/DD", "YYYY/MM/DD HH:MM:SS" or "DD/MM/YYYY", "DD/MM/YYYY HH:MM:SS" and returns a DateTime
 		public static DateTime stringToDateTime(string date_str)
 		{
 			Regex r = new Regex("^[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]");
@@ -28,13 +28,13 @@ namespace cinemaXXX
 				string[] date_arr = new string[3];
 				date_arr = date_str.Split('/');
 				//int[] ints = date_arr.Select(x => int.Parse(x)).ToArray();
-				return (r.Match(date_str).Success) ? new DateTime(int.Parse(date_arr[2]), int.Parse(date_arr[0]), int.Parse(date_arr[1]), 0, 0, 0) : new DateTime(int.Parse(date_arr[0]), int.Parse(date_arr[1]), int.Parse(date_arr[2]), 0, 0, 0);
+				return (r.Match(date_str).Success) ? new DateTime(int.Parse(date_arr[0]), int.Parse(date_arr[1]), int.Parse(date_arr[2]), 0, 0, 0) : new DateTime(int.Parse(date_arr[0]), int.Parse(date_arr[1]), int.Parse(date_arr[2]), 0, 0, 0);
 			}
 			// If the string date format is with hours, minutes, seconds
 			else {
 				string[] date_arr = new string[6];
 				date_arr = date_str.Replace(':', '/').Replace(' ', '/').Split('/');
-				return (r.Match(date_str).Success) ? new DateTime(int.Parse(date_arr[2]), int.Parse(date_arr[0]), int.Parse(date_arr[1]), int.Parse(date_arr[3]), int.Parse(date_arr[4]), int.Parse(date_arr[5])) : new DateTime(int.Parse(date_arr[0]), int.Parse(date_arr[1]), int.Parse(date_arr[2]), int.Parse(date_arr[3]), int.Parse(date_arr[4]), int.Parse(date_arr[5]));
+				return (r.Match(date_str).Success) ? new DateTime(int.Parse(date_arr[0]), int.Parse(date_arr[1]), int.Parse(date_arr[2]), int.Parse(date_arr[3]), int.Parse(date_arr[4]), int.Parse(date_arr[5])) : new DateTime(int.Parse(date_arr[0]), int.Parse(date_arr[1]), int.Parse(date_arr[2]), int.Parse(date_arr[3]), int.Parse(date_arr[4]), int.Parse(date_arr[5]));
 			}
 		}
 		

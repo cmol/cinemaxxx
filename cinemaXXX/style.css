@@ -23,14 +23,14 @@
 	font-weight: bold;
 }
 
-#ctl00_loginBox {
+#loginDiv {
 	float: right;
 	text-align: left;
 	position: relative;
 	top: -30px;
 }
 
-#ctl00_loginBox span {
+#loginDiv span {
 	font-size: 100%;
 	font-weight: bold;
 }
