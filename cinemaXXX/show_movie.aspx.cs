@@ -18,15 +18,16 @@ namespace cinemaXXX
 			
 			DataMaster movie = new Movie();
 			movie.id = Convert.ToInt32(Request["moid"]);
-			movie.get();
-			
-			showMovieStats.InnerHtml = "Spilletid " + movie.read("runtime").ToString() + "<br />";
-			showMovieStats.InnerHtml += "Premiere " + ((DateTime)movie.read("launch")).ToShortDateString() + "<br />";
-			
-			showMovieDesc.InnerHtml = "<h1>" + movie.read("title").ToString() + "</h1>";
-			showMovieDesc.InnerHtml += movie.read("description").ToString();
-			
-			showMovieImg.ImageUrl = movie.read("imgurl").ToString();
+			if (movie.get()) {
+				showMovieStats.InnerHtml = "Spilletid " + movie.read("runtime").ToString() + "<br />";
+				showMovieStats.InnerHtml += "Premiere " + ((DateTime)movie.read("launch")).ToShortDateString() + "<br />";
+				showMovieDesc.InnerHtml = "<h1>" + movie.read("title").ToString() + "</h1>";
+				showMovieDesc.InnerHtml += movie.read("description").ToString();
+				showMovieImg.ImageUrl = movie.read("imgurl").ToString();
+				Page.Header.Title += " - " + movie.read("title");
+			} else {
+				throw new Exception("Movie not found");
+			}
 		}
 		
 	}

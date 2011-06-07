@@ -3,9 +3,20 @@
 	padding: 0;
 }
 
+html, body {
+	height:100%;
+	overflow: hidden;
+}
+
+#container {
+	overflow:auto;
+	height:	100%;
+	background-color: #BAD;
+}
+
 #wrapper
 {
-  background-color: #FED;
+  
 	font-family: Verdana, Arial, "MS Trebuchet", sans-serif;
 	font-size: 80%;
 }
@@ -38,7 +49,7 @@
 
 #main 
 {
-  background-color: #123456;
+  
 }
 
 #navigation 
@@ -81,8 +92,9 @@
 
 #content 
 {
-    background-color: #BAD;
+    
     min-height: 200px;
+    
     padding: 10px;
 }
 
@@ -90,6 +102,9 @@
 {
     background-color: #159;
     min-height: 15px;
+    position:	absolute;
+    bottom:	0px;
+    width:100%;
 }
 
 .presentationFloatLeft {
