@@ -80,5 +80,42 @@ namespace cinemaXXX
 				drawLogin(loginBox);
 			}
 		}
+		
+		public static bool loggedIn()
+		{
+			return (HttpContext.Current.Session["UserToken"] != null ? true : false);
+		}
+		
+		public static bool isAdmin()
+		{
+			if (loggedIn()) {
+				User user = (User) HttpContext.Current.Session["UserToken"];
+				if (user.id == 1) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		public static bool redirectByAuthenticated(string auth)
+		{
+			switch (auth) {
+			case "admin":
+				if (!isAdmin()) {
+					System.Web.HttpContext.Current.Response.Redirect("Default.aspx");
+					return false;
+				}
+				break;
+			case "user":
+				if (!loggedIn()) {
+					System.Web.HttpContext.Current.Response.Redirect("Default.aspx");
+					return false;
+				}
+				break;
+			default:
+			break;
+			}
+			return true;
+		}
 	}
 }
