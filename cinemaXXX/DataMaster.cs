@@ -391,7 +391,7 @@ namespace cinemaXXX
 					foreach (var elementkey in elements.Keys){
 						ListItem li = new ListItem();
 						li.Value = elementkey.ToString();
-						li.Text = elements[elementkey].read("title").ToString();
+						li.Text = elements[elementkey].ToString();
 						control.Items.Add(li);
 					}
 				    webControl = control;
@@ -476,6 +476,19 @@ namespace cinemaXXX
 				}
 			}
 			return null;
+		}
+		
+		/* 
+		 * Override ToString 
+		 * Override this again in inherited classes if there is no title, or you wan't something else
+		 * as an example user classes could return firstname lastname
+		 */
+		override public string ToString() {
+			if (this._dbData.ContainsKey("title")) {
+				return this._dbData["title"].ToString();
+			} else {
+				return this._dbTable;
+			}
 		}
 		
 /* End of stuff
