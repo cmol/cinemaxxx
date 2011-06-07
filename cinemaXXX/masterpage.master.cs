@@ -18,7 +18,9 @@ namespace cinemaXXX
 			if (Page.IsPostBack == false) {
 				//
 			}
-
+			
+			Menu.drawMenu(menu);
+			
 		}
 		
 		protected void loginDo(object sender, System.EventArgs e)
