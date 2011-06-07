@@ -50,6 +50,7 @@
     <Content Include="style.css" />
     <Content Include="movie_prototype.aspx" />
     <Content Include="show_movie.aspx" />
+    <Content Include="show_movies.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">
@@ -85,6 +86,12 @@
     </Compile>
     <Compile Include="show_movie.aspx.designer.cs">
       <DependentUpon>show_movie.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="show_movies.aspx.cs">
+      <DependentUpon>show_movies.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="show_movies.aspx.designer.cs">
+      <DependentUpon>show_movies.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
