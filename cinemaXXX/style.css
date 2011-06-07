@@ -118,3 +118,7 @@ img {
 .presentationFloatRight{
 	float:	right;
 }
+
+.hidden {
+	display:	none;
+}

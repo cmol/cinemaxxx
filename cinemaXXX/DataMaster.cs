@@ -440,6 +440,9 @@ namespace cinemaXXX
 				TableCell cellB = new TableCell ();
 				cellB.Controls.Add (this.createHtmlInputControl(key, key));
 				row.Cells.Add (cellB);
+				if (this._primaryKey == key) {
+					((WebControl)row).CssClass = "hidden";
+				}
 				table.Rows.Add (row);
 			}
 			return table;
