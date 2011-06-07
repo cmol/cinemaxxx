@@ -89,7 +89,7 @@
 #footer 
 {
     background-color: #159;
-    height: 15px;
+    min-height: 15px;
 }
 
 .presentationFloatLeft {
