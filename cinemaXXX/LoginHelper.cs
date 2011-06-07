@@ -9,6 +9,8 @@ namespace cinemaXXX
 {
 	public static class LoginHelper
 	{
+		//----------------- Start methods for drawing loginBox
+		
 		private static void drawLogin(PlaceHolder loginBox)
 		{
 			LiteralControl title = new LiteralControl("<span>Login</span>");
@@ -60,7 +62,8 @@ namespace cinemaXXX
 		
 		private static void drawLogout(PlaceHolder loginBox)
 		{
-			LiteralControl title = new LiteralControl("<span>Logout</span><br />");
+			User user = (User) HttpContext.Current.Session["UserToken"];
+			LiteralControl title = new LiteralControl("<span>Hi, "+user.ToString()+"</span><br />");
 			
 			Button logout = new Button();
 			logout.Text = "Logout";
@@ -80,6 +83,10 @@ namespace cinemaXXX
 				drawLogin(loginBox);
 			}
 		}
+		
+		//----------------- End methods for drawing loginBox
+		
+		//----------------- Start methods for authenticating
 		
 		public static bool loggedIn()
 		{
@@ -117,5 +124,7 @@ namespace cinemaXXX
 			}
 			return true;
 		}
+		
+		//----------------- End methods for authenticating
 	}
 }
