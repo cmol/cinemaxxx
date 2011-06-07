@@ -30,7 +30,7 @@ namespace cinemaXXX
 
 				cell.Text = "<h2>" + movies[moid].read("title").ToString() + "</h2>";
 				row.Controls.Add(cell);
-				cell.Text += (movies[moid].read("description").ToString().Length > 1024) ? movies[moid].read("description").ToString().Substring(1, 1024) : movies[moid].read("description").ToString();
+				cell.Text += (movies[moid].read("description").ToString().Length > 1024) ? movies[moid].read("description").ToString().Substring(1, 1024) + "..." : movies[moid].read("description").ToString();
 				row.Controls.Add(cell);
 				
 				table.Controls.Add(row);
