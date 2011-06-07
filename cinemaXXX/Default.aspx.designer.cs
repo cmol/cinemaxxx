@@ -16,5 +16,11 @@ namespace cinemaXXX {
 		protected System.Web.UI.WebControls.Content Content1;
 		
 		protected System.Web.UI.WebControls.Content Content2;
+		
+		protected System.Web.UI.HtmlControls.HtmlGenericControl showMovieStats;
+		
+		protected System.Web.UI.HtmlControls.HtmlGenericControl showMovieDesc;
+		
+		protected System.Web.UI.WebControls.Image showMovieImg;
 	}
 }

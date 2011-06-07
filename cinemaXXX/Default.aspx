@@ -3,5 +3,9 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder" Runat="Server">
-    This is content
+    <div style="width:20%;" class="presentationFloatLeft" id="showMovieStats" runat="server">
+	</div>
+	<div style="width:50%;" class="presentationFloatLeft" id="showMovieDesc" runat="server">
+	</div>
+	<asp:Image class="presentationFloatRight" runat="server" id="showMovieImg"></asp:Image>
 </asp:Content>
