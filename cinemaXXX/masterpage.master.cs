@@ -28,6 +28,7 @@ namespace cinemaXXX
 			if (Session["UserToken"] != null) {
 				Session["UserToken"] = null;
 				LoginHelper.drawByAuthenticated(loginBox);
+				System.Web.HttpContext.Current.Response.Redirect("Default.aspx");
 			}
 			else {
 				User currentUser = new User();
@@ -35,6 +36,7 @@ namespace cinemaXXX
 				currentUser = tmp.Login(((TextBox)loginBox.FindControl("loginEmail")).Text, ((TextBox)loginBox.FindControl("loginPasswd")).Text);
 				if (currentUser != null) {
 					LoginHelper.drawByAuthenticated(loginBox);
+					System.Web.HttpContext.Current.Response.Redirect("Default.aspx");
 				}
 				else {
 					loginBox.Controls.Add(new LiteralControl("Login failed!"));
