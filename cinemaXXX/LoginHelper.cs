@@ -29,6 +29,7 @@ namespace cinemaXXX
 						
 			TextBox passwd = new TextBox();
 			passwd.ID = "loginPasswd";
+			passwd.TextMode = TextBoxMode.Password;
 			
 			Button login = new Button();
 			login.Text = "Login";
@@ -59,7 +60,7 @@ namespace cinemaXXX
 		
 		private static void drawLogout(PlaceHolder loginBox)
 		{
-			LiteralControl title = new LiteralControl("<span>Login</span>");
+			LiteralControl title = new LiteralControl("<span>Logout</span><br />");
 			
 			Button logout = new Button();
 			logout.Text = "Logout";
