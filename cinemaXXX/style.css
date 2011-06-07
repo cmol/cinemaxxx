@@ -92,9 +92,7 @@ html, body {
 
 #content 
 {
-    
     min-height: 200px;
-    
     padding: 10px;
 }
 
@@ -105,6 +103,7 @@ html, body {
     position:	absolute;
     bottom:	0px;
     width:100%;
+    color: #FED;
 }
 
 .presentationFloatLeft {
