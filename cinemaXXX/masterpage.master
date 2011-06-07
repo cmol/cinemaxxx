@@ -11,7 +11,7 @@
 <form runat="server">
 	<div id="wrapper">
 		<div id="header">
-		<img src="Cinemaxx_Logo_small.png" alt="cinemaXXX" title="cinemaXXX" />
+		<a href="/"><img src="Cinemaxx_Logo_small.png" alt="cinemaXXX" title="cinemaXXX" /></a>
 			<div id="loginDiv">
 				<asp:PlaceHolder id="loginBox" runat="server" />
 			</div>
