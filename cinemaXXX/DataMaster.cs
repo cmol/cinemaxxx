@@ -485,7 +485,7 @@ namespace cinemaXXX
 		 */
 		override public string ToString() {
 			if (this._dbData.ContainsKey("title")) {
-				return this._dbData["title"].ToString();
+				return this.read("title").ToString();
 			} else {
 				return this._dbTable;
 			}
