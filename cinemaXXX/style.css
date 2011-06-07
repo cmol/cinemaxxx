@@ -8,6 +8,10 @@ html, body {
 	overflow: hidden;
 }
 
+img {
+	border:	0;
+}
+
 #container {
 	overflow:auto;
 	height:	100%;
