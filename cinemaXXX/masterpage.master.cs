@@ -18,6 +18,7 @@ namespace cinemaXXX
 			if (Page.IsPostBack == false) {
 				//
 			}
+
 		}
 		
 		protected void loginDo(object sender, System.EventArgs e)
