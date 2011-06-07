@@ -86,6 +86,7 @@
     <Compile Include="show_movie.aspx.designer.cs">
       <DependentUpon>show_movie.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Menu.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
