@@ -176,13 +176,15 @@ namespace cinemaXXX
 		/* fill the object with data for the current ID */
 		public bool get() {
 			string sql = "SELECT * FROM " + this._dbTable + " WHERE " + this._primaryKey + " = " + this._dbData[this._primaryKey];
+			bool foundSomething  = false;
 			MySqlCommand cmd = new MySqlCommand(sql, dbConnection());
 			using (MySqlDataReader reader = cmd.ExecuteReader()) {
 				while(reader.Read()) {
 					this._readerFill(reader);
+					foundSomething = true;
 				}
 			}
-			return true;
+			return foundSomething;
 		}	
 		
 		/* Get all records from the current table 
