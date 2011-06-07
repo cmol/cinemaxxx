@@ -19,7 +19,7 @@
 		<div id="main">
 			<div id="navigation">
 				<ul>
-					<li onclick="location.href='#'">This</li>
+					<li onclick="location.href='show_movies.aspx'">Show Movies</li>
 					<li onclick="location.href='#'">Is</li>
 					<li onclick="location.href='#'">The</li>
 					<li onclick="location.href='#'">Navigation</li>
