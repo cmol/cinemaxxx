@@ -14,6 +14,8 @@ Global
 		{CF4B54C2-D912-40E8-8E90-7604EA92241E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF4B54C2-D912-40E8-8E90-7604EA92241E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = cinemaXXX\cinemaXXX.csproj
 	EndGlobalSection
