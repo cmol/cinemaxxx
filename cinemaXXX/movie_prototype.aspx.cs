@@ -13,7 +13,12 @@ namespace cinemaXXX
 		protected void Page_Load (object sender, EventArgs e)
 		{
 			if (Page.IsPostBack == false) {
-
+				
+				if (!LoginHelper.redirectByAuthenticated("admin")) {
+					//Environment.Exit(0);
+					Content2 = null;
+				}
+				
 			}
 				
 				//Movie stuff = new Movie();
