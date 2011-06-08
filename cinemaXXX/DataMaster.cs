@@ -180,6 +180,12 @@ namespace cinemaXXX
 			}
 		}
 		
+		public static Dictionary<string, DataMaster> family {
+			get {
+				return DataMaster._family;
+			}
+		}
+		
 /* End of definitions
  * ----------------------------------------------------
  * Beginning of Database I/O
@@ -355,7 +361,18 @@ namespace cinemaXXX
  */		
  
  	public object read(string key) {
- 		return this._dbData[key];
+ 		return this.read(key, false);
+ 		//return this._dbData[key];
+ 	}
+ 	
+ 	public object read(string key, bool reference) {
+ 		if (reference && this._isForeignKey(key)) {
+ 			//if this is a reference, get the value in he other end
+ 			var tmpObj = DataMaster.spawnTableObject(this._foreignKeyTable(key));
+ 			return tmpObj.read(key);
+ 		} else {
+ 			return this._dbData[key];
+ 		}
  	}
  	
  	public bool write(string key, object input) {
