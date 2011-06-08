@@ -174,6 +174,12 @@ namespace cinemaXXX
 			}
 		}
 		
+		public static Dictionary<string, DataMaster> family {
+			get {
+				return DataMaster._family;
+			}
+		}
+		
 /* End of definitions
  * ----------------------------------------------------
  * Beginning of Database I/O
@@ -330,13 +336,13 @@ namespace cinemaXXX
 		
 		/* Is this key a foreign key? meening there is a primary key in som table there is a reference to this one? 
 		 */
-		private bool _isForeignKey(string key) {
+		public bool _isForeignKey(string key) {
 			return DataMaster._dbReferences[this._dbTable].ContainsKey(key);
 		}
 		
 		/* If this key is a foreign key, then in which table is the "master" for this reference? 
 		 */
-		private string _foreignKeyTable(string key) {
+		public string _foreignKeyTable(string key) {
 			if (!DataMaster._dbReferences[this._dbTable].ContainsKey(key)) return null;
 			return DataMaster._dbReferences[this._dbTable][key];
 		}
@@ -349,7 +355,18 @@ namespace cinemaXXX
  */		
  
  	public object read(string key) {
- 		return this._dbData[key];
+ 		return this.read(key, false);
+ 		//return this._dbData[key];
+ 	}
+ 	
+ 	public object read(string key, bool reference) {
+ 		if (reference && this._isForeignKey(key)) {
+ 			//if this is a reference, get the value in he other end
+ 			var tmpObj = DataMaster.spawnTableObject(this._foreignKeyTable(key));
+ 			return tmpObj.read(key);
+ 		} else {
+ 			return this._dbData[key];
+ 		}
  	}
  	
  	public bool write(string key, object input) {
