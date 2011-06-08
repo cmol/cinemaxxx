@@ -152,6 +152,12 @@ namespace cinemaXXX
 		 * Will be set when the inherited class is instantiated
 		 */
 		private string _primaryKey;
+		
+		/* Use this to store instances of classes inhereting from DataMaster
+		 * String is the table name for that class
+		 * run DataMaster.getFamily to fill it
+		 */
+		private static Dictionary<string, DataMaster> _family;
 
 		/* get/set the id of the object, derived from _primaryKey */
 		public int id{
@@ -357,7 +363,7 @@ namespace cinemaXXX
  */		
 		
 		/* Virtual spawn method, overridden in children, so children can create new objects the same type as itself
-		 * This could be replaced by the newer spawnTableClass, and spawn() could subsequently be removed from inherited classes, although spawnTableClass is a bit heavier than this one 
+		 * This could be replaced by the newer spawnTableObject, and spawn() could subsequently be removed from inherited classes, although spawnTableObject is a bit heavier than this one 
 		  */
 		virtual protected DataMaster spawn() {
 			return new DataMaster();
@@ -385,7 +391,7 @@ namespace cinemaXXX
 					/* SELECTS! */
 				    DropDownList control = new DropDownList();
 
-					DataMaster tmpObj = DataMaster.spawnTableClass(this._foreignKeyTable(key));
+					DataMaster tmpObj = DataMaster.spawnTableObject(this._foreignKeyTable(key));
 
 					var elements = tmpObj.getAll();
 					foreach (var elementkey in elements.Keys){
@@ -448,7 +454,6 @@ namespace cinemaXXX
 			return table;
 		}
 		
-		//work in progress
 		//create the opposite of createHtmlInputControl to handle control types when read
 		public bool fillObjectFromPlaceHolder(PlaceHolder placeholder) {
 			Control currentControl;
@@ -461,24 +466,6 @@ namespace cinemaXXX
 				}
 			}
 			return true;
-		}
-		
-		/* Find the class belonging to the provided table, and return an object of that class
-		 * Usefull when you want the data that is being referenced, and not just the id
-		 * A bit heavy, it needs to instantiate the classes one by one, until it reaches the matching class
-		 */
-		public static DataMaster spawnTableClass(string table) {
-			Assembly assembly = Assembly.GetExecutingAssembly();
-			var types = assembly.GetTypes();
-			foreach (Type type in types) {
-				if (type.IsSubclassOf(typeof(DataMaster))) {
-					DataMaster tmpObject = (DataMaster)Activator.CreateInstance(type);
-					if (tmpObject._dbTable == table) {
-						return tmpObject;
-					}
-				}
-			}
-			return null;
 		}
 		
 		/* 
@@ -495,6 +482,48 @@ namespace cinemaXXX
 		}
 		
 /* End of stuff
+ * ----------------------------------------------------
+ * Beginning of family relations
+ */		
+ 		/* Find the class belonging to the provided table, and return an object of that class
+		 * Usefull when you want the data that is being referenced, and not just the id
+		 * A bit heavy, it needs to instantiate the classes one by one, until it reaches the matching class
+		 */
+		public static DataMaster spawnTableObject(string table) {
+			Assembly assembly = Assembly.GetExecutingAssembly();
+			var types = assembly.GetTypes();
+			foreach (Type type in types) {
+				if (type.IsSubclassOf(typeof(DataMaster))) {
+					DataMaster tmpObject = (DataMaster)Activator.CreateInstance(type);
+					if (tmpObject._dbTable == table) {
+						return tmpObject;
+					}
+				}
+			}
+			return null;
+		}
+		
+		/* fill _family
+		 */
+		public static bool getTheFamily() {
+			if (DataMaster._family.Count != 0) {
+				//the family is already ready to go
+				return true;
+			}
+			Assembly assembly = Assembly.GetExecutingAssembly();
+			var types = assembly.GetTypes();
+			//Dictionary<string, DataMaster> returnDic = new Dictionary<string, DataMaster>();
+			foreach (Type type in types) {
+				if (type.IsSubclassOf(typeof(DataMaster))) {
+					DataMaster tmpObject = (DataMaster)Activator.CreateInstance(type);
+					DataMaster._family.Add(tmpObject._dbTable, tmpObject);
+				}
+			}
+			return true;
+		}
+ 
+ 
+ /* End of family relations
  * ----------------------------------------------------
  */		
  
