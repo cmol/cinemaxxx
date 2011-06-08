@@ -143,6 +143,12 @@ namespace cinemaXXX
 		 */
 		protected Dictionary<string, object> _dbData;
 		
+		public Dictionary<string, object> dbData {
+			get {
+				return this._dbData;	
+			}
+		}
+		
 		/* What is the main table behind this dataclass
 		 * Will be set by the inhereted class when it is instantiated
 		 */
@@ -330,13 +336,13 @@ namespace cinemaXXX
 		
 		/* Is this key a foreign key? meening there is a primary key in som table there is a reference to this one? 
 		 */
-		private bool _isForeignKey(string key) {
+		public bool _isForeignKey(string key) {
 			return DataMaster._dbReferences[this._dbTable].ContainsKey(key);
 		}
 		
 		/* If this key is a foreign key, then in which table is the "master" for this reference? 
 		 */
-		private string _foreignKeyTable(string key) {
+		public string _foreignKeyTable(string key) {
 			if (!DataMaster._dbReferences[this._dbTable].ContainsKey(key)) return null;
 			return DataMaster._dbReferences[this._dbTable][key];
 		}
