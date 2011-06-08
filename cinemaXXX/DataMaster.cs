@@ -363,7 +363,7 @@ namespace cinemaXXX
  		if (reference && this._isForeignKey(key)) {
  			//if this is a reference, get the value in he other end
  			var tmpObj = DataMaster.spawnTableObject(this._foreignKeyTable(key));
- 			return tmpObj.read(key);
+ 			return tmpObj.ToString();
  		} else {
  			return this._dbData[key];
  		}
