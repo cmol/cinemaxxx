@@ -14,6 +14,7 @@ namespace cinemaXXX
 			// Begin menu declaration for all
 			Dictionary<string, string> menuItems = new Dictionary<string, string>();
 			menuItems.Add("Show Movies", "show_movies.aspx");
+			menuItems.Add("Order Tickets", "order_ticket.aspx");
 			
 			// Begin user menu declaration
 			if (LoginHelper.loggedIn()) {
