@@ -23,6 +23,7 @@ namespace cinemaXXX
 			// Begin admin menu declaration
 			if (LoginHelper.isAdmin()) {
 				menuItems.Add("Show Admins", "show_admin.aspx");
+				menuItems.Add("Show Adv. Admin", "admin_advanced.aspx");
 			}
 						
 			// Draw menu
@@ -32,4 +33,5 @@ namespace cinemaXXX
 		}
 	}
 }
+
 
