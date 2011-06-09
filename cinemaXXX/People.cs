@@ -19,6 +19,10 @@ namespace cinemaXXX
 		override protected DataMaster spawn() {
 			return new People();
 		}
+		
+		override public string ToString() {
+			return this.read("fname").ToString() + " " + this.read("lname").ToString();
+		}
 	}
 }
 

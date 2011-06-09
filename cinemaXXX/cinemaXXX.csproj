@@ -51,6 +51,7 @@
     <Content Include="movie_prototype.aspx" />
     <Content Include="show_movie.aspx" />
     <Content Include="show_movies.aspx" />
+    <Content Include="admin_advanced.aspx" />
     <Content Include="order_ticket.aspx" />
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +95,12 @@
     </Compile>
     <Compile Include="show_movies.aspx.designer.cs">
       <DependentUpon>show_movies.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin_advanced.aspx.cs">
+      <DependentUpon>admin_advanced.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="admin_advanced.aspx.designer.cs">
+      <DependentUpon>admin_advanced.aspx</DependentUpon>
     </Compile>
     <Compile Include="order_ticket.aspx.cs">
       <DependentUpon>order_ticket.aspx</DependentUpon>

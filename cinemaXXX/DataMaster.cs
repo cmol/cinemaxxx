@@ -78,6 +78,7 @@ namespace cinemaXXX
 			if (_dbReferences.Count == 0) {
 				string sql = "SELECT * FROM information_schema.KEY_COLUMN_USAGE WHERE constraint_schema = '" + ConfigurationSettings.AppSettings["DataBaseName"] + "' AND REFERENCED_COLUMN_NAME IS NOT NULL";
 				MySqlCommand cmd = new MySqlCommand(sql, dbConnection());
+				//_dbReferences.Clear();
 				using (MySqlDataReader reader = cmd.ExecuteReader()) {
 					while(reader.Read()) {
 						if (_dbReferences.ContainsKey(reader["TABLE_NAME"].ToString())) {
@@ -103,9 +104,8 @@ namespace cinemaXXX
 			foreach (DataRow row in _dbSchemas[this._dbTable].Rows){
 				if ((bool) row["IsKey"]) {
 					this._primaryKey = row["ColumnName"].ToString();
+					return true;
 				}
-				//neccesary?
-				//this._dbData.Add(row["ColumnName"].ToString(), new object());
 			}
 			return true;
 		}
@@ -233,6 +233,9 @@ namespace cinemaXXX
 		 * add is reserved :(
 		 */
 		public bool insert() {
+			if (this._dbData.ContainsKey(this._primaryKey)) {
+				this._dbData.Remove(this._primaryKey);
+			}
 			string[] columns = new string[this._dbData.Count];
 			string[] values = new string[columns.Length];
 			int i = 0;
@@ -286,6 +289,7 @@ namespace cinemaXXX
 		 */
 		public bool getSchema() {
 			if (!(_dbSchemas.ContainsKey(this._dbTable))) {
+				//we need to have data in the table for this to work, fix later
 				string sql = "SELECT * FROM " + this._dbTable + " LIMIT 1";
 				//throw new Exception(sql);
 				MySqlCommand cmd = new MySqlCommand(sql, dbConnection());
@@ -342,14 +346,18 @@ namespace cinemaXXX
 		
 		/* Is this key a foreign key? meening there is a primary key in som table there is a reference to this one? 
 		 */
-		public bool _isForeignKey(string key) {
-			return DataMaster._dbReferences[this._dbTable].ContainsKey(key);
+		private bool _isForeignKey(string key) {
+			if (DataMaster._dbReferences.ContainsKey(this._dbTable)) {
+				return DataMaster._dbReferences[this._dbTable].ContainsKey(key);
+			} else {
+				return false;
+			}
 		}
 		
 		/* If this key is a foreign key, then in which table is the "master" for this reference? 
 		 */
-		public string _foreignKeyTable(string key) {
-			if (!DataMaster._dbReferences[this._dbTable].ContainsKey(key)) return null;
+		private string _foreignKeyTable(string key) {
+			if (!this._isForeignKey(key)) return null;
 			return DataMaster._dbReferences[this._dbTable][key];
 		}
 		
@@ -362,7 +370,6 @@ namespace cinemaXXX
  
  	public object read(string key) {
  		return this.read(key, false);
- 		//return this._dbData[key];
  	}
  	
  	public object read(string key, bool reference) {
@@ -531,13 +538,13 @@ namespace cinemaXXX
 		/* fill _family
 		 */
 		public static bool getTheFamily() {
-			if (DataMaster._family.Count != 0) {
+			if (DataMaster._family is Dictionary<string, DataMaster> && DataMaster.family.Count > 0) {
 				//the family is already ready to go
 				return true;
 			}
+			DataMaster._family = new Dictionary<string, DataMaster>();
 			Assembly assembly = Assembly.GetExecutingAssembly();
 			var types = assembly.GetTypes();
-			//Dictionary<string, DataMaster> returnDic = new Dictionary<string, DataMaster>();
 			foreach (Type type in types) {
 				if (type.IsSubclassOf(typeof(DataMaster))) {
 					DataMaster tmpObject = (DataMaster)Activator.CreateInstance(type);

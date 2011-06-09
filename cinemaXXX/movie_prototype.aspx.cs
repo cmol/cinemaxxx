@@ -12,6 +12,7 @@ namespace cinemaXXX
 	{
 		protected void Page_Load (object sender, EventArgs e)
 		{
+		/*
 			if (Page.IsPostBack == false) {
 				
 				if (!LoginHelper.redirectByAuthenticated("admin")) {
@@ -20,7 +21,7 @@ namespace cinemaXXX
 				}
 				
 			}
-				
+		*/		
 				//Movie stuff = new Movie();
 				//stuff.getSchema();
 				//stuff.id = 2;
@@ -59,10 +60,6 @@ namespace cinemaXXX
 				//filmB.createPlaceHolderTable(placeholder1);
 				
 				
-				
-				People personA = new People();
-				personA.id = 1;
-				personA.get();
 				/*
 				
 				
