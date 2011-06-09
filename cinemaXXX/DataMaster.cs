@@ -105,7 +105,7 @@ namespace cinemaXXX
 					this._primaryKey = row["ColumnName"].ToString();
 				}
 				//neccesary?
-				this._dbData.Add(row["ColumnName"].ToString(), new object());
+				//this._dbData.Add(row["ColumnName"].ToString(), new object());
 			}
 			return true;
 		}
