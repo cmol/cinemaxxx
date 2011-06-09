@@ -52,6 +52,7 @@
     <Content Include="show_movie.aspx" />
     <Content Include="show_movies.aspx" />
     <Content Include="admin_advanced.aspx" />
+    <Content Include="order_ticket.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">
@@ -101,6 +102,14 @@
     <Compile Include="admin_advanced.aspx.designer.cs">
       <DependentUpon>admin_advanced.aspx</DependentUpon>
     </Compile>
+    <Compile Include="order_ticket.aspx.cs">
+      <DependentUpon>order_ticket.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="order_ticket.aspx.designer.cs">
+      <DependentUpon>order_ticket.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Show.cs" />
+    <Compile Include="Order.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />

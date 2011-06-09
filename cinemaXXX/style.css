@@ -122,3 +122,8 @@ img {
 .hidden {
 	display:	none;
 }
+
+.success {
+	color: green;
+	font-weight: bold;
+}

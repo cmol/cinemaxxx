@@ -143,6 +143,12 @@ namespace cinemaXXX
 		 */
 		protected Dictionary<string, object> _dbData;
 		
+		public Dictionary<string, object> dbData {
+			get {
+				return this._dbData;	
+			}
+		}
+		
 		/* What is the main table behind this dataclass
 		 * Will be set by the inhereted class when it is instantiated
 		 */
