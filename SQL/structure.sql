@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 10, 2011 at 09:45 AM
+-- Generation Time: Jun 10, 2011 at 10:19 AM
 -- Server version: 5.1.41
 -- PHP Version: 5.3.2-1ubuntu4.9
 
@@ -78,6 +78,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `usid` int(11) DEFAULT NULL,
   `tickets` int(11) DEFAULT NULL,
   `prid` int(11) DEFAULT NULL,
+  `price` float NOT NULL,
   PRIMARY KEY (`orid`),
   KEY `shid` (`shid`),
   KEY `usid` (`usid`),
@@ -185,7 +186,7 @@ CREATE TABLE IF NOT EXISTS `shows` (
   KEY `moid` (`moid`),
   KEY `tid` (`tid`),
   KEY `prid` (`prid`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -238,9 +239,9 @@ ALTER TABLE `movie_genre`
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_3` FOREIGN KEY (`prid`) REFERENCES `prices` (`prid`),
   ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`shid`) REFERENCES `shows` (`shid`),
-  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`usid`) REFERENCES `users` (`usid`);
+  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`usid`) REFERENCES `users` (`usid`),
+  ADD CONSTRAINT `orders_ibfk_3` FOREIGN KEY (`prid`) REFERENCES `prices` (`prid`);
 
 --
 -- Constraints for table `people_movies`
