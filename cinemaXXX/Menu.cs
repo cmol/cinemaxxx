@@ -13,6 +13,7 @@ namespace cinemaXXX
 		{
 			// Begin menu declaration for all
 			Dictionary<string, string> menuItems = new Dictionary<string, string>();
+			if (HttpContext.Current.Session["UserToken"] == null) menuItems.Add("Create User", "create_user.aspx");
 			menuItems.Add("Show Movies", "show_movies.aspx");
 			menuItems.Add("Order Tickets", "order_ticket.aspx");
 			
