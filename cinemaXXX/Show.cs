@@ -19,5 +19,12 @@ namespace cinemaXXX
 		override protected DataMaster spawn() {
 			return new Show();
 		}
+		
+		override public string ToString() {
+			DataMaster movie = new Movie();
+			movie.id = Convert.ToInt32(this.read("moid"));
+			movie.get();
+			return movie.ToString() + " " + this.read("show_start") + " - " + this.read("show_end");
+		}
 	}
 }

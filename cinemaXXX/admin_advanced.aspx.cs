@@ -95,6 +95,14 @@ namespace cinemaXXX
 				System.Web.HttpContext.Current.Response.Redirect("admin_advanced.aspx?edit=" + Request["edit"].ToString());
 			}
 		}
+		
+		protected void advDelete (object sender, EventArgs e) {
+			var tmpObj = DataMaster.spawnTableObject(Request["edit"].ToString());
+			tmpObj.fillObjectFromPlaceHolder(PlaceHolderEdit);
+			if (tmpObj.delete()) {
+				System.Web.HttpContext.Current.Response.Redirect("admin_advanced.aspx?edit=" + Request["edit"].ToString());
+			}
+		}
 	}
 }
 

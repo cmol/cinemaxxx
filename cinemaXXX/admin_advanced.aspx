@@ -10,6 +10,7 @@
 	<div id="advAdminButtons" runat="server">
 		<asp:Button runat="server" Text="Update" OnClick="advUpdate"></asp:Button>
 		<asp:Button runat="server" Text="Insert" OnClick="advInsert"></asp:Button>
+		<asp:Button runat="server" Text="Delete" OnClick="advDelete"></asp:Button>
 	</div>
 </div>
 </asp:Content>
