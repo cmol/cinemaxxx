@@ -19,7 +19,7 @@ namespace cinemaXXX
 			
 			// Begin user menu declaration
 			if (LoginHelper.loggedIn()) {
-				menuItems.Add("Show Users", "show_users.aspx");
+				menuItems.Add("Show Orders", "show_orders.aspx");
 			}
 			
 			// Begin admin menu declaration
