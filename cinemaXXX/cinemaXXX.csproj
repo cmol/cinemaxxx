@@ -117,6 +117,7 @@
     <Compile Include="create_user.aspx.designer.cs">
       <DependentUpon>create_user.aspx</DependentUpon>
     </Compile>
+    <Compile Include="DataMasterCollection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />

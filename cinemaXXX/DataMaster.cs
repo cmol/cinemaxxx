@@ -275,7 +275,7 @@ namespace cinemaXXX
 		
 		/* Delete the current object from the Database */
 		public bool delete() {
-			string sql = "SELECT * FROM " + this._dbTable + " WHERE " + this._primaryKey + " = " + this.id;
+			string sql = "DELETE FROM " + this._dbTable + " WHERE " + this._primaryKey + " = " + this._dbEncapsulate(this._primaryKey);
 			MySqlCommand cmd = new MySqlCommand(sql, dbConnection());
 			return (cmd.ExecuteNonQuery() == 1 ? true : false);
 		}
@@ -430,6 +430,10 @@ namespace cinemaXXX
 						ListItem li = new ListItem();
 						li.Value = elementkey.ToString();
 						li.Text = elements[elementkey].ToString();
+						//do we really need to convert it to a string to check if it was null?
+						if (this._dbData[key].ToString() != "" && Convert.ToInt32(this._dbData[key]) == elements[elementkey].id) {
+							li.Selected = true;
+						}
 						control.Items.Add(li);
 					}
 				    webControl = control;
@@ -495,6 +499,9 @@ namespace cinemaXXX
 					this._dbData[row["ColumnName"].ToString()] = ((CheckBox)currentControl).Checked;
 				} else if (currentControl is TextBox) {
 					this._dbData[row["ColumnName"].ToString()] = ((TextBox)currentControl).Text;
+				} else if (currentControl is DropDownList) {
+					//throw new Exception(((DropDownList)currentControl).SelectedValue);
+					this._dbData[row["ColumnName"].ToString()] = ((DropDownList)currentControl).SelectedValue;
 				}
 			}
 			return true;
